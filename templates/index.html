@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Module</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        .header { margin-bottom: 28px; }
+        .header h1 { font-size: 24px; font-weight: 600; margin-bottom: 6px; }
+        .header p { font-size: 14px; color: #666; }
+
+        /* ── Cards ─────────────────────────────────────────────────── */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px 28px;
+            border: 1px solid #e5e5e5;
+            margin-bottom: 20px;
+        }
+
+        .section-heading {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-heading span {
+            background: #1a1a1a;
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        /* ── Shared fields grid ─────────────────────────────────────── */
+        .shared-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field { display: flex; flex-direction: column; gap: 6px; }
+
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #5f5f5f;
+        }
+
+        .optional {
+            font-weight: 400;
+            text-transform: none;
+            color: #bbb;
+            font-size: 10px;
+        }
+
+        input[type="text"], input[type="number"], select {
+            padding: 9px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.15s;
+            font-family: inherit;
+            width: 100%;
+            background: white;
+            color: #1a1a1a;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: #1a1a1a;
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.09);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+        }
+
+        .duration-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .duration-help {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .series-fields {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #ececec;
+            border-radius: 8px;
+            background: #fcfcfc;
+        }
+
+        .series-fields.hidden {
+            display: none;
+        }
+
+        .duration-field.hidden {
+            display: none;
+        }
+
+        .imdb-inline {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-mini {
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12px;
+            color: #444;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-mini:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ── Deal rows table ────────────────────────────────────────── */
+        .deals-wrapper { overflow-x: auto; }
+
+        .deals-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 760px;
+        }
+
+        .deals-table th {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #5f5f5f;
+            padding: 0 8px 10px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .deals-table th:first-child { width: 36px; }
+        .deals-table th:last-child { width: 40px; }
+
+        .deal-row td {
+            padding: 6px 8px;
+            vertical-align: middle;
+        }
+
+        .deal-row td:first-child {
+            font-size: 12px;
+            font-weight: 600;
+            color: #aaa;
+            text-align: center;
+        }
+
+        .deal-row input[type="text"],
+        .deal-row select {
+            font-size: 13px;
+            padding: 7px 10px;
+        }
+
+        .deal-row select { padding-right: 26px; }
+
+        /* platform multi-chips inside table */
+        .platform-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            min-width: 180px;
+        }
+
+        .p-chip {
+            padding: 3px 9px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            transition: all 0.12s;
+            color: #555;
+        }
+
+        .p-chip.active {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 4px;
+            transition: color 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-remove:hover { color: #e24b4a; }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #f0f0f0;
+            margin: 20px 0;
+        }
+
+        /* ── Buttons ────────────────────────────────────────────────── */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-add {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1.5px dashed #d0d0d0;
+            border-radius: 8px;
+            background: none;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+
+        .btn-add:hover { border-color: #1a1a1a; color: #1a1a1a; }
+        .btn-add:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .btn-compare {
+            margin-left: auto;
+            padding: 10px 28px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.15s;
+        }
+
+        .btn-compare:hover { opacity: 0.85; }
+        .btn-compare:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-ghost {
+            padding: 9px 12px;
+            border: 1px solid #dfdfdf;
+            background: #fff;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #555;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+
+        .btn-ghost:hover {
+            border-color: #bbb;
+            color: #222;
+        }
+
+        .btn-row.sticky-actions {
+            position: sticky;
+            bottom: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #efefef;
+            border-radius: 10px;
+            padding: 10px;
+            backdrop-filter: blur(6px);
+        }
+
+        .quick-hint {
+            font-size: 12px;
+            color: #666;
+            margin-left: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2e7d32;
+            display: inline-block;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .field-error {
+            color: #c62828;
+            font-size: 11px;
+            line-height: 1.35;
+            margin-top: 3px;
+            min-height: 14px;
+        }
+
+        .input-error {
+            border-color: #e24b4a !important;
+            box-shadow: 0 0 0 2px rgba(226, 75, 74, 0.08);
+        }
+
+        .error-banner {
+            display: none;
+            background: #fdecea;
+            color: #8f1d1d;
+            border: 1px solid #f7c8c5;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .panel-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .panel-tools .tools-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ── Results comparison grid ─────────────────────────────────── */
+        .results-section { display: none; }
+        .results-section.visible { display: block; }
+
+        .results-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        /* dynamically set via JS based on deal count */
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            overflow: hidden;
+        }
+
+        .result-card-header {
+            background: #1a1a1a;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-card-header .deal-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
+        .result-card-header .deal-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .confidence-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .confidence-badge.High { background: #e6f4ea; color: #2d6a3f; }
+        .confidence-badge.Medium { background: #fff8e1; color: #b45309; }
+        .confidence-badge.Low { background: #fdecea; color: #991b1b; }
+
+        .result-card-body { padding: 16px; }
+
+        .result-params {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .param-tag {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            color: #333;
+        }
+
+        .price-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .price-block {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .price-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .price-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+
+        .reasoning-block {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            line-height: 1.7;
+            color: #666;
+        }
+
+        .reasoning-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        /* Loading skeleton */
+        .result-card.loading .result-card-body {
+            padding: 24px 16px;
+            text-align: center;
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .result-card.error .result-card-body {
+            padding: 16px;
+            color: #e24b4a;
+            font-size: 13px;
+        }
+
+        /* Best deal highlight */
+        .result-card.best-deal {
+            border: 2px solid #1a1a1a;
+        }
+
+        .best-badge {
+            font-size: 10px;
+            font-weight: 700;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* ── Summary comparison table ────────────────────────────────── */
+        .summary-table-wrap { overflow-x: auto; margin-top: 20px; }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .summary-table th {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #5f5f5f;
+            background: #fafafa;
+        }
+
+        .summary-table tr:last-child td { border-bottom: none; }
+        .summary-table tr.highlight td { background: #f0f7ff; font-weight: 600; }
+
+        /* ── Mobile ─────────────────────────────────────────────────── */
+        @media (max-width: 600px) {
+            .shared-grid { grid-template-columns: 1fr; }
+            .price-row { grid-template-columns: 1fr; }
+            body { padding: 20px 12px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Film Licensing Price Estimator</h1>
+        <p>Compare multiple deal scenarios side by side — powered by AI</p>
+    </div>
+
+    <!-- ── Shared fields ───────────────────────────────────────────── -->
+    <div class="card">
+        <div class="section-heading">Title & metadata <span>shared across all deals</span></div>
+        <div class="shared-grid">
+            <div class="field">
+                <label>Title name</label>
+                <input type="text" id="title" placeholder="e.g. Oppenheimer" />
+                <div class="field-error" id="error-title"></div>
+            </div>
+            <div class="field duration-field" id="runtime-field">
+                <label>Runtime <span class="optional">(optional for series)</span></label>
+                <div class="duration-input-group">
+                    <input type="number" id="duration_hours" min="0" step="1" placeholder="Hours" />
+                    <input type="number" id="duration_minutes" min="0" max="59" step="1" placeholder="Minutes" />
+                </div>
+                <div class="duration-help" id="runtime-help">Enter runtime as hours and minutes (e.g. 2h 30m).</div>
+                <div class="field-error" id="error-runtime"></div>
+            </div>
+            <div class="field">
+                <label>Content type</label>
+                <select id="content_type" onchange="toggleContentType()">
+                    <option value="movie" selected>Movie</option>
+                    <option value="series">Series</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>IMDB link</label>
+                <div class="imdb-inline">
+                    <input type="text" id="imdb_link" placeholder="https://imdb.com/title/tt…" />
+                    <button type="button" class="btn-mini" id="btn-imdb-autofill" onclick="autoFillFromImdb()">Auto-fill</button>
+                </div>
+                <div class="duration-help" id="imdb-status">Paste IMDb link, then auto-fill details.</div>
+                <div class="field-error" id="error-imdb_link"></div>
+            </div>
+            <div class="field">
+                <label>TMDB link <span class="optional">(optional)</span></label>
+                <input type="text" id="tmdb_link" placeholder="https://themoviedb.org/movie/…" />
+            </div>
+            <div class="field full-width">
+                <label>Series package <span class="optional">(for series only)</span></label>
+                <div id="series-fields" class="series-fields hidden">
+                    <input type="number" id="season_count" min="1" step="1" placeholder="Season count (e.g. 3)" />
+                    <input type="number" id="episodes_per_season" min="1" step="1" placeholder="Episodes/season (optional)" />
+                    <select id="episode_scope" onchange="toggleEpisodeScope()">
+                        <option value="all_released" selected>All released episodes</option>
+                        <option value="custom">Custom episode count</option>
+                    </select>
+                </div>
+                <input type="number" id="episode_count" min="1" step="1" placeholder="Total episodes" disabled style="margin-top:8px;" />
+                <div class="duration-help" id="series-status">Provide season details so pricing can model package size accurately.</div>
+                <div class="field-error" id="error-series"></div>
+            </div>
+        </div>
+        <div class="error-banner" id="form-error-banner"></div>
+    </div>
+
+    <!-- ── Deal comparison table ────────────────────────────────────── -->
+    <div class="card">
+        <div class="section-heading">Deal scenarios <span id="deal-count-label">1 deal</span></div>
+        <div class="deals-wrapper">
+            <table class="deals-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Region</th>
+                        <th>Rights type</th>
+                        <th>Language rights</th>
+                        <th>License duration</th>
+                        <th>Platforms</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="deals-body"></tbody>
+            </table>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="btn-row sticky-actions">
+            <button class="btn-add" id="btn-add" onclick="addDeal()">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                Add deal scenario
+            </button>
+            <span style="font-size:12px; color:#aaa;" id="deal-limit-msg"></span>
+            <button class="btn-compare" id="btn-compare" onclick="compareAll()">Compare deals →</button>
+            <span class="quick-hint">Shortcuts: Ctrl/Cmd+Enter = Compute, Alt+N = Add deal</span>
+        </div>
+    </div>
+
+    <!-- ── Results ──────────────────────────────────────────────────── -->
+    <div class="results-section" id="results-section">
+        <div class="card" style="padding-bottom:8px;">
+            <div class="panel-tools">
+                <div class="section-heading" style="margin-bottom:0;">Comparison results</div>
+                <div class="tools-right">
+                    <span class="quick-hint"><span class="status-dot"></span>Top seller value = highest floor price</span>
+                </div>
+            </div>
+            <div class="results-grid" id="results-grid"></div>
+            <div class="summary-table-wrap" id="summary-wrap" style="display:none;">
+                <hr class="divider" style="margin-top:20px;" />
+                <div class="section-heading">Summary table</div>
+                <div class="summary-table-wrap">
+                    <table class="summary-table" id="summary-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ── State ───────────────────────────────────────────────────────────────
+const MAX_DEALS = 5;
+
+const PLATFORMS = ["YouTube", "OTT / Streaming", "Pay TV", "Free-to-Air TV", "FAST channels"];
+const RIGHTS_OPTIONS = ["Exclusive", "Non-Exclusive"];
+const LANGUAGE_OPTIONS = ["Original only", "Original + Dubbed", "Original + Dubbed + Subtitled"];
+const LICENSE_OPTIONS = ["6 months", "1 year", "2 years", "3 years", "5 years", "Perpetual / Permanent"];
+let COUNTRY_NAME_TO_CODE = {};
+let RELEASED_EPISODE_CAP = null;
+
+function setFieldError(id, message, inputIds = []) {
+    const node = document.getElementById(`error-${id}`);
+    if (node) node.textContent = message || "";
+    inputIds.forEach((inputId) => {
+        const el = document.getElementById(inputId);
+        if (el) el.classList.toggle("input-error", !!message);
+    });
+}
+
+function clearFormErrors() {
+    ["title", "runtime", "imdb_link", "series"].forEach((key) => setFieldError(key, ""));
+    ["title", "imdb_link", "duration_hours", "duration_minutes", "season_count", "episodes_per_season", "episode_count"]
+        .forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove("input-error");
+        });
+    const banner = document.getElementById("form-error-banner");
+    banner.style.display = "none";
+    banner.textContent = "";
+}
+
+function setFormError(message) {
+    const banner = document.getElementById("form-error-banner");
+    banner.textContent = message;
+    banner.style.display = "block";
+}
+
+async function loadCountries() {
+    try {
+        const res = await fetch("/countries");
+        if (!res.ok) return;
+        const data = await res.json();
+        const datalist = document.getElementById("country-options");
+        datalist.innerHTML = (data.countries || [])
+            .map(c => `<option value="${c.name}" data-code="${c.code}"></option>`)
+            .join("");
+        COUNTRY_NAME_TO_CODE = {};
+        (data.countries || []).forEach(c => {
+            COUNTRY_NAME_TO_CODE[c.name.toLowerCase()] = c.code;
+        });
+    } catch (e) {
+        console.warn("Could not load countries list");
+    }
+}
+
+// ── Build a deal row ─────────────────────────────────────────────────────
+function addDeal() {
+    const rows = getDealRows();
+    if (rows.length >= MAX_DEALS) return;
+    const nextIndex = rows.length + 1;
+
+    const tbody = document.getElementById("deals-body");
+    const row = document.createElement("tr");
+    row.className = "deal-row";
+    row.id = `deal-${nextIndex}`;
+
+    // Platform chips HTML
+    const chipsHtml = PLATFORMS.map(p =>
+        `<span class="p-chip" data-platform="${p}" onclick="togglePlatform(this)">${p}</span>`
+    ).join("");
+
+    // Rights options
+    const rightsHtml = RIGHTS_OPTIONS.map(r =>
+        `<option value="${r}">${r}</option>`
+    ).join("");
+
+    // Language options
+    const langHtml = LANGUAGE_OPTIONS.map(l =>
+        `<option value="${l}">${l}</option>`
+    ).join("");
+
+    // License options
+    const licHtml = LICENSE_OPTIONS.map(l =>
+        `<option value="${l}">${l}</option>`
+    ).join("");
+
+    row.innerHTML = `
+        <td>${nextIndex}</td>
+        <td><input type="text" class="region-input" list="country-options" placeholder="Search country (e.g. India)" /></td>
+        <td>
+            <select class="rights-select">
+                ${rightsHtml}
+            </select>
+        </td>
+        <td>
+            <select class="lang-select">
+                ${langHtml}
+            </select>
+        </td>
+        <td>
+            <select class="lic-select">
+                ${licHtml}
+                <option value="1 year" selected>1 year</option>
+            </select>
+        </td>
+        <td>
+            <div class="platform-chips">${chipsHtml}</div>
+        </td>
+        <td>
+            <button class="btn-remove" onclick="removeDeal(${nextIndex})" title="Remove">×</button>
+        </td>
+    `;
+
+    // Set default license to "1 year"
+    tbody.appendChild(row);
+    row.querySelector(".lic-select").value = "1 year";
+
+    syncDealRows();
+}
+
+function removeDeal(id) {
+    const row = document.getElementById(`deal-${id}`);
+    if (row) row.remove();
+    syncDealRows();
+}
+
+function togglePlatform(el) {
+    el.classList.toggle("active");
+}
+
+function getDealRows() {
+    return [...document.querySelectorAll(".deal-row")];
+}
+
+function syncDealRows() {
+    const rows = getDealRows();
+    rows.forEach((r, i) => {
+        const rowNumber = i + 1;
+        r.id = `deal-${rowNumber}`;
+        r.cells[0].textContent = rowNumber;
+        const removeBtn = r.querySelector(".btn-remove");
+        if (removeBtn) removeBtn.setAttribute("onclick", `removeDeal(${rowNumber})`);
+    });
+    updateDealLabel();
+    updateAddButton();
+}
+
+function updateDealLabel() {
+    const label = document.getElementById("deal-count-label");
+    const rows = getDealRows().length;
+    label.textContent = rows === 1 ? "1 deal" : `${rows} deals`;
+    updatePrimaryAction(rows);
+}
+
+function updateAddButton() {
+    const rows = getDealRows().length;
+    const btn = document.getElementById("btn-add");
+    const msg = document.getElementById("deal-limit-msg");
+    btn.disabled = rows >= MAX_DEALS;
+    msg.textContent = rows >= MAX_DEALS ? "Maximum 5 deals reached" : "";
+}
+
+function updatePrimaryAction(rows) {
+    const btn = document.getElementById("btn-compare");
+    btn.textContent = rows <= 1 ? "Compute pricing →" : "Compare deals →";
+}
+
+function getContentType() {
+    return document.getElementById("content_type").value;
+}
+
+function toggleContentType() {
+    const isSeries = getContentType() === "series";
+    const seriesFields = document.getElementById("series-fields");
+    const runtimeField = document.getElementById("runtime-field");
+    const runtimeHelp = document.getElementById("runtime-help");
+    seriesFields.classList.toggle("hidden", !isSeries);
+    runtimeField.classList.toggle("hidden", isSeries);
+    runtimeHelp.textContent = isSeries
+        ? "Runtime is optional for series. Leave blank if unknown."
+        : "Enter runtime as hours and minutes (e.g. 2h 30m).";
+    if (!isSeries) {
+        RELEASED_EPISODE_CAP = null;
+        document.getElementById("series-status").textContent = "Provide season details so pricing can model package size accurately.";
+    }
+}
+
+function toggleEpisodeScope() {
+    const scope = document.getElementById("episode_scope").value;
+    const episodeCountInput = document.getElementById("episode_count");
+    episodeCountInput.disabled = scope !== "custom";
+    if (RELEASED_EPISODE_CAP) {
+        episodeCountInput.max = String(RELEASED_EPISODE_CAP);
+    } else {
+        episodeCountInput.removeAttribute("max");
+    }
+    if (scope !== "custom" && episodeCountInput.value.trim() === "") {
+        episodeCountInput.placeholder = "Auto from released episodes";
+    } else {
+        episodeCountInput.placeholder = "Total episodes";
+    }
+}
+
+function setRuntimeFromMinutes(totalMinutes) {
+    if (!totalMinutes || totalMinutes <= 0) return;
+    const h = document.getElementById("duration_hours");
+    const m = document.getElementById("duration_minutes");
+    h.value = String(Math.floor(totalMinutes / 60));
+    m.value = String(totalMinutes % 60);
+    normalizeDurationInputs();
+}
+
+function setSeriesDefaultsFromMetadata(meta) {
+    if (!meta || meta.content_type !== "series") return;
+    document.getElementById("content_type").value = "series";
+    toggleContentType();
+    if (meta.total_seasons) {
+        document.getElementById("season_count").value = String(meta.total_seasons);
+    }
+    if (meta.released_episode_count) {
+        RELEASED_EPISODE_CAP = meta.released_episode_count;
+        document.getElementById("episode_count").value = String(meta.released_episode_count);
+        document.getElementById("series-status").textContent = `Detected ${meta.released_episode_count} released episodes across ${meta.total_seasons || "?"} seasons.`;
+    } else {
+        RELEASED_EPISODE_CAP = null;
+    }
+    toggleEpisodeScope();
+}
+
+async function autoFillFromImdb() {
+    const imdbLink = document.getElementById("imdb_link").value.trim();
+    if (!imdbLink) {
+        alert("Please paste an IMDb link first.");
+        return;
+    }
+    const btn = document.getElementById("btn-imdb-autofill");
+    const status = document.getElementById("imdb-status");
+    btn.disabled = true;
+    status.textContent = "Fetching title metadata...";
+    setFieldError("imdb_link", "", ["imdb_link"]);
+    try {
+        const res = await fetch(`/title-metadata?imdb_link=${encodeURIComponent(imdbLink)}`);
+        if (!res.ok) throw new Error("Unable to fetch IMDb metadata");
+        const meta = await res.json();
+        if (meta.title && !document.getElementById("title").value.trim()) {
+            document.getElementById("title").value = meta.title;
+        }
+        if (meta.runtime_minutes) {
+            setRuntimeFromMinutes(meta.runtime_minutes);
+        }
+        if (meta.content_type) {
+            document.getElementById("content_type").value = meta.content_type;
+            toggleContentType();
+        }
+        if (meta.content_type !== "series") {
+            RELEASED_EPISODE_CAP = null;
+        }
+        if (meta.tmdb_link && !document.getElementById("tmdb_link").value.trim()) {
+            document.getElementById("tmdb_link").value = meta.tmdb_link;
+        }
+        setSeriesDefaultsFromMetadata(meta);
+        status.textContent = "Auto-filled from IMDb. You can edit any field before computing.";
+    } catch (e) {
+        status.textContent = "Could not auto-fill from IMDb. Please enter details manually.";
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function getDurationValue() {
+    const hoursRaw = document.getElementById("duration_hours").value.trim();
+    const minutesRaw = document.getElementById("duration_minutes").value.trim();
+    let hours = Number(hoursRaw || 0);
+    let minutes = Number(minutesRaw || 0);
+
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) return "";
+    if (hours < 0 || minutes < 0) return "";
+
+    if (minutes >= 60) {
+        hours += Math.floor(minutes / 60);
+        minutes = minutes % 60;
+    }
+
+    const parts = [];
+    if (hours > 0) parts.push(`${hours} hour${hours === 1 ? "" : "s"}`);
+    if (minutes > 0) parts.push(`${minutes} min`);
+    if (parts.length === 0) {
+        return getContentType() === "series" ? "Series package runtime unspecified" : "";
+    }
+    return parts.join(" ");
+}
+
+function getRuntimeMinutes() {
+    const hoursRaw = document.getElementById("duration_hours").value.trim();
+    const minutesRaw = document.getElementById("duration_minutes").value.trim();
+    const hours = Number(hoursRaw || 0);
+    const minutes = Number(minutesRaw || 0);
+    if (Number.isNaN(hours) || Number.isNaN(minutes) || hours < 0 || minutes < 0) return null;
+    const total = (hours * 60) + minutes;
+    return total > 0 ? total : null;
+}
+
+function getSeriesMetadata() {
+    if (getContentType() !== "series") {
+        return {
+            season_count: null,
+            episodes_per_season: null,
+            episode_count: null
+        };
+    }
+    const seasonCount = Number(document.getElementById("season_count").value || 0);
+    const episodesPerSeason = Number(document.getElementById("episodes_per_season").value || 0);
+    const episodeScope = document.getElementById("episode_scope").value;
+    const episodeCount = Number(document.getElementById("episode_count").value || 0);
+    const derivedEpisodes = seasonCount > 0 && episodesPerSeason > 0 ? seasonCount * episodesPerSeason : 0;
+    let finalEpisodeCount = episodeScope === "custom" ? episodeCount : (episodeCount || derivedEpisodes);
+    if (RELEASED_EPISODE_CAP && finalEpisodeCount > RELEASED_EPISODE_CAP) {
+        finalEpisodeCount = RELEASED_EPISODE_CAP;
+    }
+    return {
+        season_count: seasonCount > 0 ? seasonCount : null,
+        episodes_per_season: episodesPerSeason > 0 ? episodesPerSeason : null,
+        episode_count: finalEpisodeCount > 0 ? finalEpisodeCount : null
+    };
+}
+
+function normalizeDurationInputs() {
+    const h = document.getElementById("duration_hours");
+    const m = document.getElementById("duration_minutes");
+    let hours = Number(h.value || 0);
+    let minutes = Number(m.value || 0);
+
+    if (Number.isNaN(hours) || hours < 0) hours = 0;
+    if (Number.isNaN(minutes) || minutes < 0) minutes = 0;
+
+    if (minutes >= 60) {
+        hours += Math.floor(minutes / 60);
+        minutes = minutes % 60;
+    }
+
+    h.value = hours > 0 ? String(hours) : "";
+    m.value = minutes > 0 ? String(minutes) : "";
+}
+
+// ── Collect deal data from a row ─────────────────────────────────────────
+function getDealData(row) {
+    const region = row.querySelector(".region-input").value.trim();
+    const country_code = COUNTRY_NAME_TO_CODE[region.toLowerCase()] || "";
+    const rights = row.querySelector(".rights-select").value;
+    const lang = row.querySelector(".lang-select").value;
+    const lic = row.querySelector(".lic-select").value;
+    const platforms = [...row.querySelectorAll(".p-chip.active")].map(c => c.dataset.platform);
+    return { region, country_code, rights_type: rights, language_rights: lang, license_duration: lic, platforms };
+}
+
+// ── Validate shared fields ───────────────────────────────────────────────
+function validateShared() {
+    clearFormErrors();
+    const fields = { title: "title name", imdb_link: "IMDB link" };
+    for (const [id, label] of Object.entries(fields)) {
+        if (!document.getElementById(id).value.trim()) {
+            setFieldError(id, `Please fill in the ${label} field.`, [id]);
+            return false;
+        }
+    }
+
+    const duration = getDurationValue();
+    if (getContentType() !== "series" && !duration) {
+        setFieldError("runtime", "Please enter runtime in hours and/or minutes.", ["duration_hours", "duration_minutes"]);
+        return false;
+    }
+
+    if (getContentType() === "series") {
+        const series = getSeriesMetadata();
+        const hasEpisodeShape = !!series.episode_count || !!(series.season_count && series.episodes_per_season);
+        if (!hasEpisodeShape) {
+            setFieldError("series", "For series, provide total episodes or season count + episodes per season.", ["season_count", "episodes_per_season", "episode_count"]);
+            return false;
+        }
+        if (RELEASED_EPISODE_CAP && series.episode_count && series.episode_count > RELEASED_EPISODE_CAP) {
+            setFieldError("series", `Episode count cannot exceed released episodes (${RELEASED_EPISODE_CAP}).`, ["episode_count"]);
+            return false;
+        }
+    }
+    return true;
+}
+
+// ── Compare all deals ────────────────────────────────────────────────────
+async function compareAll() {
+    if (!validateShared()) return;
+
+    const rows = document.querySelectorAll(".deal-row");
+    if (rows.length === 0) {
+        setFormError("Please add at least one deal scenario.");
+        return;
+    }
+
+    // Validate each deal row
+    const deals = [];
+    for (let i = 0; i < rows.length; i++) {
+        const d = getDealData(rows[i]);
+        if (!d.region) { setFormError(`Deal ${i + 1}: Please enter a region.`); return; }
+        if (d.platforms.length === 0) { setFormError(`Deal ${i + 1}: Please select at least one platform.`); return; }
+        deals.push(d);
+    }
+
+    const sharedTitle = document.getElementById("title").value.trim();
+    const sharedImdb = document.getElementById("imdb_link").value.trim();
+    const sharedTmdb = document.getElementById("tmdb_link").value.trim();
+    const sharedDuration = getDurationValue();
+    const contentType = getContentType();
+    const runtimeMinutes = getRuntimeMinutes();
+    const seriesMetadata = getSeriesMetadata();
+
+    const btn = document.getElementById("btn-compare");
+    btn.disabled = true;
+    btn.textContent = "Estimating...";
+
+    // Show results section with loading cards
+    const section = document.getElementById("results-section");
+    const grid = document.getElementById("results-grid");
+    section.classList.add("visible");
+    document.getElementById("summary-wrap").style.display = "none";
+
+    // Set grid columns
+    const cols = Math.min(deals.length, 3);
+    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    if (deals.length > 3) grid.style.gridTemplateColumns = `repeat(2, 1fr)`;
+    if (deals.length === 1) grid.style.gridTemplateColumns = `1fr`;
+
+    // Render loading placeholders
+    grid.innerHTML = deals.map((d, i) => `
+        <div class="result-card loading" id="result-card-${i}">
+            <div class="result-card-header">
+                <div>
+                    <div class="deal-label">Deal ${i + 1}</div>
+                    <div class="deal-title">${d.region} · ${d.rights_type}</div>
+                </div>
+            </div>
+            <div class="result-card-body">Estimating…</div>
+        </div>
+    `).join("");
+
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // Fire all requests in parallel
+    const results = await Promise.all(deals.map(async (deal, i) => {
+        const payload = {
+            title: sharedTitle,
+            imdb_link: sharedImdb,
+            tmdb_link: sharedTmdb,
+            content_type: contentType,
+            duration: sharedDuration,
+            runtime_minutes: runtimeMinutes,
+            season_count: seriesMetadata.season_count,
+            episodes_per_season: seriesMetadata.episodes_per_season,
+            episode_count: seriesMetadata.episode_count,
+            region: deal.region,
+            country_code: deal.country_code,
+            rights_type: deal.rights_type,
+            language_rights: deal.language_rights,
+            license_duration: deal.license_duration,
+            platforms: deal.platforms
+        };
+        try {
+            const res = await fetch("/estimate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) {
+                let detail = "Server error";
+                try {
+                    const err = await res.json();
+                    detail = err.detail || detail;
+                } catch (_) {}
+                throw new Error(detail);
+            }
+            return { ok: true, data: await res.json(), deal };
+        } catch (e) {
+            return { ok: false, error: e.message, deal };
+        }
+    }));
+
+    // Find best deal (highest lower flat fee bound)
+    let bestIdx = -1;
+    let bestVal = -1;
+    results.forEach((r, i) => {
+        if (r.ok) {
+            const val = parseLower(r.data.pricing_estimate.flat_fee_range);
+            if (val > bestVal) { bestVal = val; bestIdx = i; }
+        }
+    });
+
+    // Render results
+    results.forEach((r, i) => {
+        const card = document.getElementById(`result-card-${i}`);
+        card.classList.remove("loading");
+        if (i === bestIdx && results.filter(x => x.ok).length > 1) {
+            card.classList.add("best-deal");
+        }
+
+        if (!r.ok) {
+            card.classList.add("error");
+            card.innerHTML = `
+                <div class="result-card-header">
+                    <div>
+                        <div class="deal-label">Deal ${i + 1}</div>
+                        <div class="deal-title">${r.deal.region} · ${r.deal.rights_type}</div>
+                    </div>
+                </div>
+                <div class="result-card-body">Error: ${r.error}. Please try again.</div>
+            `;
+            return;
+        }
+
+        const d = r.data;
+        const params = [r.deal.region, r.deal.rights_type, r.deal.language_rights, r.deal.license_duration, r.deal.platforms.join(" + ")];
+        const isBest = (i === bestIdx && results.filter(x => x.ok).length > 1);
+
+        card.innerHTML = `
+            <div class="result-card-header">
+                <div>
+                    <div class="deal-label">Deal ${i + 1}</div>
+                    <div class="deal-title">${r.deal.region} · ${r.deal.rights_type}</div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    ${isBest ? '<span class="best-badge">Top seller value</span>' : ''}
+                    <span class="confidence-badge ${d.confidence_level}">${d.confidence_level}</span>
+                </div>
+            </div>
+            <div class="result-card-body">
+                <div class="result-params">
+                    ${params.map(p => `<span class="param-tag">${p}</span>`).join("")}
+                </div>
+                <div class="price-row">
+                    <div class="price-block">
+                        <div class="price-label">Flat fee range</div>
+                        <div class="price-value">${d.pricing_estimate.flat_fee_range}</div>
+                    </div>
+                    <div class="price-block">
+                        <div class="price-label">Min guarantee</div>
+                        <div class="price-value">${d.pricing_estimate.minimum_guarantee}</div>
+                    </div>
+                    <div class="price-block">
+                        <div class="price-label">Revenue share</div>
+                        <div class="price-value">${d.pricing_estimate.revenue_share_range}</div>
+                    </div>
+                </div>
+                <div class="reasoning-block">
+                    <div class="reasoning-label">Reasoning</div>
+                    ${d.reasoning}
+                </div>
+            </div>
+        `;
+    });
+
+    // Build summary table if multiple deals
+    if (results.length > 1) {
+        buildSummaryTable(results, bestIdx);
+    }
+
+    btn.disabled = false;
+    updatePrimaryAction(deals.length);
+}
+
+// ── Summary table ────────────────────────────────────────────────────────
+function buildSummaryTable(results, bestIdx) {
+    const wrap = document.getElementById("summary-wrap");
+    const table = document.getElementById("summary-table");
+    wrap.style.display = "block";
+
+    const headers = ["", ...results.map((r, i) => `Deal ${i + 1}<br><small style="font-weight:400;text-transform:none;">${r.deal.region} · ${r.deal.rights_type}</small>`)];
+    const rows = [
+        { label: "Flat fee range",   key: r => r.ok ? r.data.pricing_estimate.flat_fee_range : "—" },
+        { label: "Min guarantee",    key: r => r.ok ? r.data.pricing_estimate.minimum_guarantee : "—" },
+        { label: "Revenue share",    key: r => r.ok ? r.data.pricing_estimate.revenue_share_range : "—" },
+        { label: "Confidence",       key: r => r.ok ? r.data.confidence_level : "—" },
+        { label: "License duration", key: r => r.deal.license_duration },
+        { label: "Language rights",  key: r => r.deal.language_rights },
+        { label: "Platforms",        key: r => r.deal.platforms.join(", ") },
+    ];
+
+    table.innerHTML = `
+        <thead>
+            <tr>${headers.map((h, i) => `<th${i === bestIdx + 1 ? ' style="background:#f0f7ff;"' : ''}>${h}</th>`).join("")}</tr>
+        </thead>
+        <tbody>
+            ${rows.map(row => `
+                <tr>
+                    <td style="color:#888;font-size:12px;white-space:nowrap;">${row.label}</td>
+                    ${results.map((r, i) => `<td${i === bestIdx ? ' style="background:#f0f7ff;"' : ''}>${row.key(r)}</td>`).join("")}
+                </tr>
+            `).join("")}
+        </tbody>
+    `;
+}
+
+// ── Utility: parse lower bound of "USD X - USD Y" ───────────────────────
+function parseLower(s) {
+    if (!s || s === "Unavailable") return 0;
+    s = s.replace(/,/g, "").replace(/USD/gi, "").trim();
+    const first = s.split("-")[0].trim();
+    if (first.toUpperCase().includes("M")) return parseFloat(first) * 1_000_000;
+    if (first.toLowerCase().includes("k")) return parseFloat(first) * 1_000;
+    return parseFloat(first) || 0;
+}
+
+// ── Init: start with one deal row ────────────────────────────────────────
+document.body.insertAdjacentHTML("beforeend", '<datalist id="country-options"></datalist>');
+loadCountries();
+document.getElementById("duration_hours").addEventListener("blur", normalizeDurationInputs);
+document.getElementById("duration_minutes").addEventListener("blur", normalizeDurationInputs);
+document.getElementById("imdb_link").addEventListener("blur", autoFillFromImdb);
+document.addEventListener("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        event.preventDefault();
+        compareAll();
+    }
+    if (event.altKey && (event.key === "n" || event.key === "N")) {
+        event.preventDefault();
+        addDeal();
+    }
+});
+toggleContentType();
+toggleEpisodeScope();
+addDeal();
+</script>
+</body>
+</html>
