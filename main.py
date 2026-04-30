@@ -744,27 +744,57 @@ def store_audit_record(
 
 
 def deterministic_reasoning(
-    deal: DealRequest, confidence: str, score: float, min_price: int, max_price: int
+    deal: DealRequest,
+    confidence: str,
+    score: float,
+    min_price: int,
+    max_price: int,
+    market_tier: str,
+    low_data_rule: bool,
 ) -> str:
+    rights_bias = "upward" if deal.rights_type.lower() == "exclusive" else "neutral"
+    data_note = (
+        "Data coverage is limited in this case, so the recommendation should be treated as a conservative anchor."
+        if low_data_rule
+        else "Data coverage is adequate for directional negotiation planning."
+    )
+    strategy_note = (
+        f"Open negotiations near {format_usd_range(int(max_price * 0.9), max_price)} and protect a floor near "
+        f"{format_usd_range(min_price, int(min_price * 1.1))}."
+    )
     return (
-        f"This estimate is derived from a deterministic pricing model that combines title demand signals, "
-        f"deal structure, and platform economics for {deal.region}. The resulting valuation band for "
-        f"{deal.title} reflects a calibrated content score of {score:.1f}/100 and commercial rights scope "
-        f"across {', '.join(deal.platforms)}. Confidence is {confidence.lower()} based on the strength and "
-        f"completeness of available market metadata. Final suggested flat fee range is {format_usd_range(min_price, max_price)}."
+        f"{deal.title} is priced at {format_usd_range(min_price, max_price)} for {deal.region} based on a "
+        f"{score:.1f}/100 content score, {deal.rights_type.lower()} rights, {deal.license_duration.lower()} term, "
+        f"and distribution across {', '.join(deal.platforms)}. Confidence is {confidence.lower()} in a "
+        f"{market_tier.lower()} market, with deal structure biasing valuation {rights_bias}. {data_note} {strategy_note}"
     )
 
 
 def generate_reasoning_with_ai(
-    deal: DealRequest, confidence: str, score: float, min_price: int, max_price: int
+    deal: DealRequest,
+    confidence: str,
+    score: float,
+    min_price: int,
+    max_price: int,
+    market_tier: str,
+    low_data_rule: bool,
 ) -> str:
+    data_context = "limited" if low_data_rule else "adequate"
     prompt = f"""
-    You are a film licensing consultant. Explain the provided deterministic pricing output in 3 concise business sentences.
+    You are a senior film licensing consultant. Explain the deterministic pricing output in exactly 4 concise business sentences.
     Do not change numbers.
+    Keep the tone executive and practical, not generic.
+    Include:
+    1) Main valuation drivers (rights, term, territory, platform scope),
+    2) Why confidence is {confidence} using market/data context,
+    3) What this implies for risk in negotiation,
+    4) A clear negotiation posture with opening-anchor and protected floor language.
 
     Deal:
     - Title: {deal.title}
     - Region: {deal.region}
+    - Market tier: {market_tier}
+    - Data coverage: {data_context}
     - Platforms: {", ".join(deal.platforms)}
     - Rights Type: {deal.rights_type}
     - License Duration: {deal.license_duration}
@@ -775,7 +805,10 @@ def generate_reasoning_with_ai(
     - Confidence: {confidence}
     - Flat fee range: {format_usd_range(min_price, max_price)}
 
-    Return only plain text.
+    Hard constraints:
+    - Keep all numeric values exactly as provided.
+    - Do not mention "AI", "model", or "deterministic" in the final answer.
+    - Return plain text only.
     """
     try:
         return call_gemini(prompt, expect_json=False)
@@ -783,7 +816,15 @@ def generate_reasoning_with_ai(
         try:
             return call_groq(prompt, expect_json=False)
         except Exception:
-            return deterministic_reasoning(deal, confidence, score, min_price, max_price)
+            return deterministic_reasoning(
+                deal,
+                confidence,
+                score,
+                min_price,
+                max_price,
+                market_tier,
+                low_data_rule,
+            )
 
 # ── Enrichment Functions ───────────────────────────────────────────────────────
 def fetch_tmdb_data(tmdb_link: str) -> dict:
@@ -1150,7 +1191,15 @@ def estimate(deal: DealRequest):
             mg_min = min(mg_min, mg_max)
 
         confidence = compute_confidence(market_info["tier"], omdb_data, tmdb_data, low_data_rule)
-        reasoning = generate_reasoning_with_ai(deal, confidence, score, min_price, max_price)
+        reasoning = generate_reasoning_with_ai(
+            deal,
+            confidence,
+            score,
+            min_price,
+            max_price,
+            market_info["tier"],
+            low_data_rule,
+        )
 
         response_payload = {
             "title": deal.title,
