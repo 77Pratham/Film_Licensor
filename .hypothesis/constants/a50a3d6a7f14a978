@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\types\image_content.py
+# hypothesis_version: 6.142.4
+
+['ImageContent', 'high', 'image', 'image/bmp', 'image/gif', 'image/heic', 'image/heif', 'image/jpeg', 'image/png', 'image/tiff', 'image/webp', 'low', 'medium', 'ultra_high']

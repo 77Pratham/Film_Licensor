@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\create.py
+# hypothesis_version: 6.142.4
+
+["'%s'", ',', '1.4', '2.0', '_coerce_config', '_initialize', '_is_async', '_is_asyncio', 'async_fallback', 'compiler_linting', 'connect', 'connect_args', 'creator', 'dbapi', 'dialect', 'echo', 'echo_pool', 'empty_in_strategy', 'enable_from_linting', 'events', 'future', 'import_dbapi', 'logging_name', 'mock', 'module', 'pcls', 'pool', 'pool_events', 'pool_logging_name', 'pool_pre_ping', 'pool_recycle', 'pool_reset_on_return', 'pool_timeout', 'pool_use_lifo', 'poolclass', 'pre_ping', 'recycle', 'reset_on_return', 'sqlalchemy.', 'strategy', 'timeout', 'unknown strategy: %r', 'url', 'use_lifo']

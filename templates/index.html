@@ -175,18 +175,144 @@
             grid-column: 1 / -1;
         }
 
-        .series-fields {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
-            padding: 10px;
+        .series-fields { display: none; }
+        .series-fields.hidden { display: none; }
+
+        .hidden { display: none; }
+
+        .lic-custom-input {
+            margin-top: 4px;
+            width: 100%;
+            padding: 4px 8px;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--surface-soft);
+            border-radius: 4px;
+            font-size: 12px;
         }
 
-        .series-fields.hidden {
-            display: none;
+        /* ── Season Selector Widget ───────────────────────────── */
+        .season-selector {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface-soft);
+            overflow: hidden;
+            margin-top: 2px;
+        }
+        .season-selector.hidden { display: none; }
+
+        .season-selector-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-muted);
+        }
+
+        .season-selector-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .season-row {
+            display: grid;
+            grid-template-columns: 28px 1fr 130px;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            border-bottom: 1px solid rgba(38,52,73,0.5);
+            transition: background 0.12s;
+        }
+        .season-row:last-child { border-bottom: none; }
+        .season-row.held {
+            opacity: 0.45;
+            background: var(--surface-muted-2);
+        }
+        .season-row.active { background: rgba(111,144,255,0.05); }
+
+        .season-checkbox {
+            width: 16px; height: 16px;
+            accent-color: var(--brand-strong);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .season-row.held .season-checkbox { cursor: not-allowed; }
+
+        .season-label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+        .season-label-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+        }
+        .season-label-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .season-label-held {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--warning);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-left: 6px;
+        }
+
+        .season-ep-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .season-ep-input {
+            width: 56px;
+            text-align: center;
+            font-size: 12px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--control-bg);
+            color: var(--text);
+        }
+        .season-ep-input:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .season-ep-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .season-ep-max {
+            font-size: 10px;
+            color: var(--text-faint);
+        }
+
+        .season-context-banner {
+            font-size: 11.5px;
+            border-radius: 7px;
+            padding: 7px 11px;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        .season-context-banner.incremental {
+            background: rgba(92, 207, 159, 0.08);
+            border: 1px solid rgba(92, 207, 159, 0.25);
+            color: #5ccf9f;
+        }
+        .season-context-banner.partial {
+            background: rgba(255, 202, 122, 0.08);
+            border: 1px solid rgba(255, 202, 122, 0.25);
+            color: #ffca7a;
         }
 
         .duration-field.hidden {
@@ -598,6 +724,40 @@
             text-transform: uppercase;
         }
 
+        /* ── Export memo button ──────────────────────────────────────── */
+        .btn-export-memo {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            background: rgba(111, 144, 255, 0.1);
+            color: var(--brand);
+            border: 1px solid rgba(111, 144, 255, 0.28);
+            border-radius: 7px;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: background 0.14s, border-color 0.14s, transform 0.1s;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+        .btn-export-memo:hover {
+            background: rgba(111, 144, 255, 0.2);
+            border-color: var(--brand);
+            transform: translateY(-1px);
+        }
+        .btn-export-memo:active { transform: translateY(0); }
+        .btn-export-memo:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-export-memo svg {
+            width: 12px; height: 12px;
+            flex-shrink: 0;
+        }
+
         /* ── Summary comparison table ────────────────────────────────── */
         .summary-table-wrap { overflow-x: auto; margin-top: 20px; border: 1px solid var(--border); border-radius: 12px; background: rgba(9, 15, 24, 0.45); }
 
@@ -752,6 +912,18 @@
             color: #f8fbff;
             background: linear-gradient(130deg, #4f76ff, #6f90ff);
         }
+        body[data-theme="light"] .btn-export-memo {
+            background: rgba(79, 118, 255, 0.07);
+            color: #3a60e8;
+            border-color: rgba(79, 118, 255, 0.22);
+        }
+        body[data-theme="light"] .btn-export-memo:hover {
+            background: rgba(79, 118, 255, 0.15);
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -809,16 +981,12 @@
             </div>
             <div class="field full-width">
                 <label>Series package <span class="optional">(for series only)</span></label>
-                <div id="series-fields" class="series-fields hidden">
-                    <input type="number" id="season_count" min="1" step="1" placeholder="Season count (e.g. 3)" />
-                    <input type="number" id="episodes_per_season" min="1" step="1" placeholder="Episodes/season (optional)" />
-                    <select id="episode_scope" onchange="toggleEpisodeScope()">
-                        <option value="all_released" selected>All released episodes</option>
-                        <option value="custom">Custom episode count</option>
-                    </select>
-                </div>
-                <input type="number" id="episode_count" min="1" step="1" placeholder="Total episodes" disabled style="margin-top:8px;" />
-                <div class="duration-help" id="series-status">Provide season details so pricing can model package size accurately.</div>
+                <!-- hidden legacy inputs kept for backend compat -->
+                <input type="hidden" id="season_count" />
+                <input type="hidden" id="episode_count" />
+                <!-- Season selector widget — rendered dynamically by buildSeasonSelector() -->
+                <div id="season-selector" class="season-selector hidden"></div>
+                <div class="duration-help" id="series-status">Auto-fill from IMDb to load season data.</div>
                 <div class="field-error" id="error-series"></div>
             </div>
         </div>
@@ -889,10 +1057,15 @@ const MAX_DEALS = 5;
 const PLATFORMS = ["YouTube", "OTT / Streaming", "Pay TV", "Free-to-Air TV", "FAST channels"];
 const RIGHTS_OPTIONS = ["Exclusive", "Non-Exclusive"];
 const LANGUAGE_OPTIONS = ["Original only", "Original + Dubbed", "Original + Dubbed + Subtitled"];
-const LICENSE_OPTIONS = ["6 months", "1 year", "2 years", "3 years", "5 years", "Perpetual / Permanent"];
+const LICENSE_OPTIONS = ["6 months", "1 year", "2 years", "3 years", "5 years", "Perpetual / Permanent", "Custom"];
 let COUNTRY_NAME_TO_CODE = {};
 let RELEASED_EPISODE_CAP = null;
+// Season selector state — populated from IMDb and user interaction
+// { seasonNum: { total: N, selected: bool, customEps: N|null, held: bool } }
+let SEASON_STATE = {};
 const DEAL_RESULT_CACHE = new Map();
+let LAST_RESULTS = [];          // [{deal, data}] — populated after each compute run
+let LAST_SHARED_INPUTS = null;  // shared inputs from last run
 
 function setFieldError(id, message, inputIds = []) {
     const node = document.getElementById(`error-${id}`);
@@ -905,7 +1078,7 @@ function setFieldError(id, message, inputIds = []) {
 
 function clearFormErrors() {
     ["title", "runtime", "imdb_link", "series"].forEach((key) => setFieldError(key, ""));
-    ["title", "imdb_link", "duration_hours", "duration_minutes", "season_count", "episodes_per_season", "episode_count"]
+    ["title", "imdb_link", "duration_hours", "duration_minutes", "season_count", "episode_count"]
         .forEach((id) => {
             const el = document.getElementById(id);
             if (el) el.classList.remove("input-error");
@@ -984,10 +1157,10 @@ function addDeal() {
             </select>
         </td>
         <td>
-            <select class="lic-select">
+            <select class="lic-select" onchange="handleLicenseOptionChange(this)">
                 ${licHtml}
-                <option value="1 year" selected>1 year</option>
             </select>
+            <input type="text" class="lic-custom-input hidden" placeholder="Enter custom duration (e.g. 18 months)" />
         </td>
         <td>
             <div class="platform-chips">${chipsHtml}</div>
@@ -1031,6 +1204,18 @@ function syncDealRows() {
     updateAddButton();
 }
 
+function handleLicenseOptionChange(selectElement) {
+    const row = selectElement.closest('.deal-row');
+    const customInput = row.querySelector('.lic-custom-input');
+    if (selectElement.value === 'Custom') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+    } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+    }
+}
+
 function updateDealLabel() {
     const label = document.getElementById("deal-count-label");
     const rows = getDealRows().length;
@@ -1057,35 +1242,23 @@ function getContentType() {
 
 function toggleContentType() {
     const isSeries = getContentType() === "series";
-    const seriesFields = document.getElementById("series-fields");
+    const selector = document.getElementById("season-selector");
     const runtimeField = document.getElementById("runtime-field");
     const runtimeHelp = document.getElementById("runtime-help");
-    seriesFields.classList.toggle("hidden", !isSeries);
     runtimeField.classList.toggle("hidden", isSeries);
     runtimeHelp.textContent = isSeries
         ? "Runtime is optional for series. Leave blank if unknown."
         : "Enter runtime as hours and minutes (e.g. 2h 30m).";
     if (!isSeries) {
         RELEASED_EPISODE_CAP = null;
-        document.getElementById("series-status").textContent = "Provide season details so pricing can model package size accurately.";
+        SEASON_STATE = {};
+        selector.classList.add("hidden");
+        selector.innerHTML = "";
+        document.getElementById("series-status").textContent = "Auto-fill from IMDb to load season data.";
     }
 }
 
-function toggleEpisodeScope() {
-    const scope = document.getElementById("episode_scope").value;
-    const episodeCountInput = document.getElementById("episode_count");
-    episodeCountInput.disabled = scope !== "custom";
-    if (RELEASED_EPISODE_CAP) {
-        episodeCountInput.max = String(RELEASED_EPISODE_CAP);
-    } else {
-        episodeCountInput.removeAttribute("max");
-    }
-    if (scope !== "custom" && episodeCountInput.value.trim() === "") {
-        episodeCountInput.placeholder = "Auto from released episodes";
-    } else {
-        episodeCountInput.placeholder = "Total episodes";
-    }
-}
+// toggleEpisodeScope removed — replaced by season selector widget
 
 function setRuntimeFromMinutes(totalMinutes) {
     if (!totalMinutes || totalMinutes <= 0) return;
@@ -1096,21 +1269,126 @@ function setRuntimeFromMinutes(totalMinutes) {
     normalizeDurationInputs();
 }
 
+function buildSeasonSelector(meta) {
+    if (!meta || meta.content_type !== "series") return;
+
+    const breakdown = meta.season_episode_counts || {};
+    const totalSeasons = meta.total_seasons || Object.keys(breakdown).length;
+    if (totalSeasons === 0) return;
+
+    // Build initial SEASON_STATE — all seasons selected by default, not held
+    SEASON_STATE = {};
+    for (let s = 1; s <= totalSeasons; s++) {
+        SEASON_STATE[s] = {
+            total: breakdown[s] || null,
+            selected: true,
+            customEps: null,
+            held: false,
+        };
+    }
+
+    RELEASED_EPISODE_CAP = meta.released_episode_count || null;
+    document.getElementById("season_count").value = String(totalSeasons);
+    renderSeasonSelector(totalSeasons);
+
+    const statusParts = Object.keys(breakdown).sort((a,b)=>a-b)
+        .map(s => `S${s}:${breakdown[s]}ep`);
+    const statusStr = statusParts.length ? ` (${statusParts.join(", ")})` : "";
+    document.getElementById("series-status").textContent =
+        `${meta.released_episode_count || "?"} episodes across ${totalSeasons} seasons${statusStr}. Tick seasons to include in deal.`;
+}
+
+function renderSeasonSelector(totalSeasons) {
+    const el = document.getElementById("season-selector");
+    el.classList.remove("hidden");
+
+    const rows = [];
+    for (let s = 1; s <= totalSeasons; s++) {
+        const state = SEASON_STATE[s];
+        const epTotal = state.total ? state.total : "?";
+        const isHeld = state.held;
+        const isSelected = state.selected;
+        const customVal = state.customEps !== null ? state.customEps : "";
+        const heldBadge = isHeld ? `<span class="season-label-held">already held</span>` : "";
+        const rowClass = isHeld ? "season-row held" : (isSelected ? "season-row active" : "season-row");
+
+        rows.push(`
+        <div class="${rowClass}" id="season-row-${s}">
+            <input type="checkbox" class="season-checkbox" id="season-cb-${s}"
+                ${isSelected ? "checked" : ""} ${isHeld ? "disabled" : ""}
+                onchange="onSeasonToggle(${s}, this.checked)" />
+            <div class="season-label">
+                <span class="season-label-title">Season ${s}${heldBadge}</span>
+                <span class="season-label-sub">${state.total ? state.total + " episodes detected" : "episode count unknown"}</span>
+            </div>
+            <div class="season-ep-control">
+                <input type="number" class="season-ep-input" id="season-ep-${s}"
+                    min="1" max="${state.total || 999}" value="${customVal}"
+                    placeholder="${epTotal}"
+                    ${(!isSelected || isHeld) ? "disabled" : ""}
+                    title="Leave blank to use all ${epTotal} episodes"
+                    oninput="onEpisodeOverride(${s}, this.value)" />
+                <span class="season-ep-label">/ ${epTotal} ep</span>
+            </div>
+        </div>`);
+    }
+
+    el.innerHTML = `
+        <div class="season-selector-header">
+            <span>Seasons in this deal</span>
+            <span style="font-size:10px;font-weight:400;color:var(--text-faint)">Tick to include · enter episode count to override</span>
+        </div>
+        <div class="season-selector-body">${rows.join("")}</div>`;
+}
+
+function onSeasonToggle(seasonNum, checked) {
+    if (!SEASON_STATE[seasonNum]) return;
+    SEASON_STATE[seasonNum].selected = checked;
+    if (!checked) SEASON_STATE[seasonNum].customEps = null;
+    // Re-render just this row
+    const row = document.getElementById(`season-row-${seasonNum}`);
+    const epInput = document.getElementById(`season-ep-${seasonNum}`);
+    if (row) row.className = checked ? "season-row active" : "season-row";
+    if (epInput) {
+        epInput.disabled = !checked;
+        if (!checked) epInput.value = "";
+    }
+    updateHeldBadges();
+}
+
+function onEpisodeOverride(seasonNum, val) {
+    if (!SEASON_STATE[seasonNum]) return;
+    const n = parseInt(val, 10);
+    SEASON_STATE[seasonNum].customEps = (!isNaN(n) && n > 0) ? n : null;
+}
+
+function markSeasonsAsHeld(heldList) {
+    // Called when user types in already_acquired field (future hook)
+    heldList.forEach(s => {
+        if (SEASON_STATE[s]) {
+            SEASON_STATE[s].held = true;
+            SEASON_STATE[s].selected = true;
+            SEASON_STATE[s].customEps = null;
+            const cb = document.getElementById(`season-cb-${s}`);
+            const epInput = document.getElementById(`season-ep-${s}`);
+            const row = document.getElementById(`season-row-${s}`);
+            if (cb) { cb.checked = true; cb.disabled = true; }
+            if (epInput) epInput.disabled = true;
+            if (row) row.className = "season-row held";
+        }
+    });
+}
+
+function updateHeldBadges() {
+    // Re-evaluate "already held" state across all seasons (called after any change)
+    // Currently a no-op placeholder — held state is set at render time
+}
+
 function setSeriesDefaultsFromMetadata(meta) {
     if (!meta || meta.content_type !== "series") return;
     document.getElementById("content_type").value = "series";
     toggleContentType();
-    if (meta.total_seasons) {
-        document.getElementById("season_count").value = String(meta.total_seasons);
-    }
-    if (meta.released_episode_count) {
-        RELEASED_EPISODE_CAP = meta.released_episode_count;
-        document.getElementById("episode_count").value = String(meta.released_episode_count);
-        document.getElementById("series-status").textContent = `Detected ${meta.released_episode_count} released episodes across ${meta.total_seasons || "?"} seasons.`;
-    } else {
-        RELEASED_EPISODE_CAP = null;
-    }
-    toggleEpisodeScope();
+    buildSeasonSelector(meta);
 }
 
 async function autoFillFromImdb() {
@@ -1188,25 +1466,51 @@ function getRuntimeMinutes() {
 
 function getSeriesMetadata() {
     if (getContentType() !== "series") {
-        return {
-            season_count: null,
-            episodes_per_season: null,
-            episode_count: null
-        };
+        return { season_count: null, episodes_per_season: null, episode_count: null,
+                 included_seasons: "", already_acquired_seasons: "",
+                 season_episode_counts: null, episodes_per_season_override: null };
     }
+
     const seasonCount = Number(document.getElementById("season_count").value || 0);
-    const episodesPerSeason = Number(document.getElementById("episodes_per_season").value || 0);
-    const episodeScope = document.getElementById("episode_scope").value;
-    const episodeCount = Number(document.getElementById("episode_count").value || 0);
-    const derivedEpisodes = seasonCount > 0 && episodesPerSeason > 0 ? seasonCount * episodesPerSeason : 0;
-    let finalEpisodeCount = episodeScope === "custom" ? episodeCount : (episodeCount || derivedEpisodes);
-    if (RELEASED_EPISODE_CAP && finalEpisodeCount > RELEASED_EPISODE_CAP) {
-        finalEpisodeCount = RELEASED_EPISODE_CAP;
+    const selectedSeasons   = [];
+    const heldSeasons       = [];
+    const seasonEpCounts    = {};   // {s: N}  — IMDb detected counts
+    const episodeOverrides  = {};   // {s: N}  — user-specified custom counts
+
+    Object.entries(SEASON_STATE).forEach(([s, state]) => {
+        const sNum = Number(s);
+        if (state.total) seasonEpCounts[sNum] = state.total;
+        if (state.selected) selectedSeasons.push(sNum);
+        if (state.held) heldSeasons.push(sNum);
+        if (state.selected && !state.held && state.customEps !== null) {
+            episodeOverrides[sNum] = state.customEps;
+        }
+    });
+
+    selectedSeasons.sort((a,b) => a-b);
+    heldSeasons.sort((a,b) => a-b);
+
+    // Compute episode_count for backend: sum of included seasons' episodes
+    // Using override if provided, else IMDb count, else 0
+    const netNewSeasons = selectedSeasons.filter(s => !heldSeasons.includes(s));
+    let netEpisodes = 0;
+    netNewSeasons.forEach(s => {
+        netEpisodes += episodeOverrides[s] ?? seasonEpCounts[s] ?? 0;
+    });
+
+    // If everything selected and no held, use total released count
+    if (heldSeasons.length === 0 && netEpisodes === 0 && RELEASED_EPISODE_CAP) {
+        netEpisodes = RELEASED_EPISODE_CAP;
     }
+
     return {
         season_count: seasonCount > 0 ? seasonCount : null,
-        episodes_per_season: episodesPerSeason > 0 ? episodesPerSeason : null,
-        episode_count: finalEpisodeCount > 0 ? finalEpisodeCount : null
+        episodes_per_season: null,
+        episode_count: netEpisodes > 0 ? netEpisodes : null,
+        included_seasons: selectedSeasons.join(","),
+        already_acquired_seasons: heldSeasons.join(","),
+        season_episode_counts: Object.keys(seasonEpCounts).length > 0 ? seasonEpCounts : null,
+        episode_overrides: Object.keys(episodeOverrides).length > 0 ? episodeOverrides : null,
     };
 }
 
@@ -1234,7 +1538,11 @@ function getDealData(row) {
     const country_code = COUNTRY_NAME_TO_CODE[region.toLowerCase()] || "";
     const rights = row.querySelector(".rights-select").value;
     const lang = row.querySelector(".lang-select").value;
-    const lic = row.querySelector(".lic-select").value;
+    let lic = row.querySelector(".lic-select").value;
+    if (lic === "Custom") {
+        const customInput = row.querySelector(".lic-custom-input").value.trim();
+        lic = customInput || "1 year"; // fallback if empty
+    }
     const platforms = [...row.querySelectorAll(".p-chip.active")].map(c => c.dataset.platform);
     return { region, country_code, rights_type: rights, language_rights: lang, license_duration: lic, platforms };
 }
@@ -1250,6 +1558,10 @@ function buildEstimatePayload(shared, deal) {
         season_count: shared.series.season_count,
         episodes_per_season: shared.series.episodes_per_season,
         episode_count: shared.series.episode_count,
+        included_seasons: shared.series.included_seasons || "",
+        already_acquired_seasons: shared.series.already_acquired_seasons || "",
+        season_episode_counts: shared.series.season_episode_counts || null,
+        episode_overrides: shared.series.episode_overrides || null,
         region: deal.region,
         country_code: deal.country_code,
         rights_type: deal.rights_type,
@@ -1278,13 +1590,13 @@ function validateShared() {
 
     if (getContentType() === "series") {
         const series = getSeriesMetadata();
-        const hasEpisodeShape = !!series.episode_count || !!(series.season_count && series.episodes_per_season);
-        if (!hasEpisodeShape) {
-            setFieldError("series", "For series, provide total episodes or season count + episodes per season.", ["season_count", "episodes_per_season", "episode_count"]);
+        if (!series.season_count) {
+            setFieldError("series", "Please auto-fill from IMDb to load season data.", []);
             return false;
         }
-        if (RELEASED_EPISODE_CAP && series.episode_count && series.episode_count > RELEASED_EPISODE_CAP) {
-            setFieldError("series", `Episode count cannot exceed released episodes (${RELEASED_EPISODE_CAP}).`, ["episode_count"]);
+        const selectedCount = Object.values(SEASON_STATE).filter(s => s.selected).length;
+        if (selectedCount === 0) {
+            setFieldError("series", "Please select at least one season to include in this deal.", []);
             return false;
         }
     }
@@ -1462,12 +1774,30 @@ async function compareAll() {
                 <div style="display:flex;gap:6px;align-items:center;">
                     ${isBest ? '<span class="best-badge">Top seller value</span>' : ''}
                     <span class="confidence-badge ${d.confidence_level}">${d.confidence_level}</span>
+                    <button class="btn-export-memo" id="memo-btn-${i}" onclick="exportMemo(${i})" title="Download deal memo PDF">
+                        <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 1v7M3 5.5l3 3 3-3M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Memo
+                    </button>
                 </div>
             </div>
             <div class="result-card-body">
                 <div class="result-params">
                     ${params.map(p => `<span class="param-tag">${p}</span>`).join("")}
                 </div>
+                ${(() => {
+                    const sc = d.pricing_components?.season_context;
+                    if (!sc) return "";
+                    if (sc.mode === "incremental") {
+                        const newSeasons = sc.net_new_seasons?.map(s=>"S"+s).join(", ") || "new season(s)";
+                        return `<div class="season-context-banner incremental">&#9432; Incremental — ${newSeasons} · ${sc.net_new_episodes} episodes · seasons ${sc.already_acquired_seasons} already held.</div>`;
+                    }
+                    if (sc.mode === "partial") {
+                        return `<div class="season-context-banner partial">&#9432; Partial series — seasons ${sc.included_seasons} · ${sc.season_ratio_pct}% coverage · ${sc.net_new_episodes} episodes priced.</div>`;
+                    }
+                    return "";
+                })()}
                 <div class="price-row">
                     <div class="price-block">
                         <div class="price-label price-fee">Flat fee range</div>
@@ -1496,8 +1826,67 @@ async function compareAll() {
         buildSummaryTable(results, bestIdx);
     }
 
+    // Store for memo export
+    LAST_SHARED_INPUTS = sharedInputs;
+    LAST_RESULTS = results.map((r, i) => ({
+        deal: buildEstimatePayload(sharedInputs, deals[i]),
+        data: r.ok ? r.data : null,
+    }));
+
     btn.disabled = false;
     updatePrimaryAction(deals.length);
+}
+
+// ── Export deal memo ─────────────────────────────────────────────────────
+async function exportMemo(idx) {
+    const entry = LAST_RESULTS[idx];
+    if (!entry || !entry.data) {
+        alert("No pricing result available for this deal. Please compute first.");
+        return;
+    }
+
+    const btn = document.getElementById(`memo-btn-${idx}`);
+    const originalHTML = btn ? btn.innerHTML : "";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `
+            <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:spin 0.8s linear infinite">
+                <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="14" stroke-dashoffset="7"/>
+            </svg>
+            Building…`;
+    }
+
+    try {
+        const res = await fetch("/export-memo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ deal: entry.deal, result: entry.data }),
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ detail: "Server error" }));
+            throw new Error(err.detail || "Server error");
+        }
+
+        const blob = await res.blob();
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement("a");
+        const cd   = res.headers.get("Content-Disposition") || "";
+        const fnMatch = cd.match(/filename="([^"]+)"/);
+        a.download = fnMatch ? fnMatch[1] : `deal_memo_${entry.data.title || "deal"}.pdf`;
+        a.href = url;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch (e) {
+        alert(`Could not generate memo: ${e.message}`);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+        }
+    }
 }
 
 // ── Summary table ────────────────────────────────────────────────────────
@@ -1560,7 +1949,7 @@ document.addEventListener("keydown", (event) => {
     }
 });
 toggleContentType();
-toggleEpisodeScope();
+// season selector initialised by buildSeasonSelector() after auto-fill
 addDeal();
 </script>
 </body>

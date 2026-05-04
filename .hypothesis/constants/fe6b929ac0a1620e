@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\interfaces.py
+# hypothesis_version: 6.142.4
+
+['AUTOCOMMIT', 'Any', 'Compiled', 'DBAPIType', 'DEFAULT', 'READ COMMITTED', 'READ UNCOMMITTED', 'REPEATABLE READ', 'SERIALIZABLE', 'TypeEngine[Any]', '_T', '_connection', 'format', 'named', 'numeric', 'numeric_dollar', 'pyformat', 'qmark']

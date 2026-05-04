@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\types\chat\chat_completion.py
+# hypothesis_version: 6.142.4
+
+['ChatCompletion', 'Choice', 'ChoiceLogprobs', 'McpListTool', 'McpListToolTool', 'UsageBreakdown', 'UsageBreakdownModel', 'XGroq', 'XGroqDebug', 'XGroqUsage', 'auto', 'chat.completion', 'flex', 'function_call', 'length', 'on_demand', 'performance', 'stop', 'tool_calls']

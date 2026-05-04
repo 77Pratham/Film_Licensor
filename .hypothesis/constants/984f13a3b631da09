@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\aiohttp\abc.py
+# hypothesis_version: 6.142.4
+
+['AbstractMatchInfo', 'BaseCookie[str]', 'CIMultiDict[str]', 'Morsel[str]', 'deflate', 'log_format', 'logger']

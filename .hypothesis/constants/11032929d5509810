@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\event\attr.py
+# hypothesis_version: 6.142.4
+
+['_Dispatch[_ET]', '_T', '__weakref__', '_clslevel', '_exec_once', '_exec_once_mutex', '_exec_w_sync_once', '_is_asyncio', '_legacy_signatures', 'arg_names', 'clsname', 'has_kw', 'legacy_signatures', 'listeners', 'local', 'name', 'parent', 'parent_dispatch', 'parent_listeners', 'propagate', 'ref']

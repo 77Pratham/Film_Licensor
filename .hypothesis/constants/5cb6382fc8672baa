@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\crud.py
+# hypothesis_version: 6.142.4
+
+['%s', '%s_%s', '%s_m%d', '%s_m0', ', ', 'Callable[..., str]', 'ColumnClause[Any]', 'ColumnElement[Any]', 'REQUIRED', '_SQLExprDefault', 'bindparam', 'insert_from_select', 'key', 'selectable', 'table', 'visiting_cte']

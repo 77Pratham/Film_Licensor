@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\websockets\asyncio\compatibility.py
+# hypothesis_version: 6.142.4
+
+['TimeoutError', 'aiter', 'anext', 'asyncio_timeout', 'asyncio_timeout_at']

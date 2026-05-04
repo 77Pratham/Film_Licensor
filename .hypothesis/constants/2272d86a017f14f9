@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\naming.py
+# hypothesis_version: 6.142.4
+
+['.', '0', 'X', '_', '_ddl_label', '_key_', '_key_%s', 'after_parent_attach', 'ck', 'constraint_name', 'fk', 'ix', 'key', 'name', 'pk', 'uq']

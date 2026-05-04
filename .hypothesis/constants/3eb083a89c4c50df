@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\cursor.py
+# hypothesis_version: 6.142.4
+
+[1000, 'Col %r', 'CursorResult[Any]', 'DBAPIType', 'List[int]', 'Row %r', '_KeyType', '_T', '_bufsize', '_echo', '_growth_factor', '_key_to_index', '_keymap', '_keys', '_max_row_buffer', '_processors', '_row_getter', '_rowbuffer', '_safe_for_cache', '_translated_indexes', '_tuplefilter', '_unpickled', 'connection', 'context', 'cursor', 'cursor_strategy', 'dialect', 'max_row_buffer']

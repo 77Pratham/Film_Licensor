@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\types\model_param.py
+# hypothesis_version: 6.142.4
+
+['ModelParam', 'gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-3-pro-preview', 'lyria-3-clip-preview', 'lyria-3-pro-preview']

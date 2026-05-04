@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -75,6 +75,11 @@ class DealRequest(BaseModel):
     episodes_per_season: Optional[int] = Field(default=None, ge=1, le=200)
     episode_count: Optional[int] = Field(default=None, ge=1, le=20000)
     included_seasons: Optional[str] = Field(default="", max_length=200)
+    already_acquired_seasons: Optional[str] = Field(default="", max_length=200)
+    # Per-season episode breakdown: {season_number: episode_count} — from IMDb via frontend
+    season_episode_counts: Optional[dict] = Field(default=None)
+    # Per-season episode overrides: {season_number: custom_count} — user-specified
+    episode_overrides: Optional[dict] = Field(default=None)
     license_duration: str = Field(min_length=1, max_length=100)
     rights_type: str = Field(min_length=1, max_length=50)
     language_rights: str = Field(min_length=1, max_length=100)
@@ -137,10 +142,14 @@ class DealRequest(BaseModel):
     @model_validator(mode="after")
     def validate_structured_content_fields(self):
         if self.content_type == "series":
-            has_episode_shape = bool(self.episode_count or (self.season_count and self.episodes_per_season))
+            has_episode_shape = bool(
+                self.episode_count
+                or self.season_count
+                or (self.season_count and self.episodes_per_season)
+            )
             if not has_episode_shape:
                 raise ValueError(
-                    "For content_type='series', provide episode_count or season_count + episodes_per_season"
+                    "For content_type='series', provide episode_count or season_count"
                 )
         return self
 
@@ -520,16 +529,126 @@ def should_trigger_low_data_rule(
     )
 
 
+def parse_included_seasons(s: str) -> list[int]:
+    """Parse '1,2,3' or '1-3' or '2' into a sorted deduplicated list of ints."""
+    seasons: list[int] = []
+    if not s or not s.strip():
+        return seasons
+    for part in re.split(r"[,;]", s):
+        part = part.strip()
+        m = re.match(r"^(\d+)\s*[-–]\s*(\d+)$", part)
+        if m:
+            seasons.extend(range(int(m.group(1)), int(m.group(2)) + 1))
+        elif re.match(r"^\d+$", part):
+            seasons.append(int(part))
+    return sorted(set(seasons))
+
+
+def resolve_net_new_episodes(deal: DealRequest) -> int:
+    """
+    Return the episode count that should drive package sizing.
+
+    Priority chain (highest to lowest):
+    1. episode_overrides for net-new seasons  — user explicitly specified per-season counts
+    2. season_episode_counts breakdown        — IMDb per-season counts
+    3. episode_count                          — total from IMDb or frontend
+    4. season_count * episodes_per_season     — manual fallback
+    5. season_count * 10                      — last resort default
+    """
+    included = parse_included_seasons(deal.included_seasons or "")
+    acquired = parse_included_seasons(deal.already_acquired_seasons or "")
+    net_new  = [s for s in included if s not in acquired] if acquired else included
+
+    breakdown: dict[int, int] = {}
+    if deal.season_episode_counts:
+        try:
+            breakdown = {int(k): int(v) for k, v in deal.season_episode_counts.items()}
+        except (ValueError, TypeError):
+            breakdown = {}
+
+    overrides: dict[int, int] = {}
+    if deal.episode_overrides:
+        try:
+            overrides = {int(k): int(v) for k, v in deal.episode_overrides.items()}
+        except (ValueError, TypeError):
+            overrides = {}
+
+    # Which seasons to price on
+    target_seasons = net_new if net_new else (
+        [s for s in included if 1 <= s <= (deal.season_count or 9999)] if included else []
+    )
+
+    if target_seasons:
+        total = 0
+        for s in target_seasons:
+            if s in overrides:
+                total += overrides[s]           # user override wins
+            elif s in breakdown:
+                total += breakdown[s]           # IMDb breakdown
+            elif deal.season_count and deal.season_count > 0:
+                avg = (deal.episode_count or deal.season_count * 10) / deal.season_count
+                total += round(avg)
+            else:
+                total += 10
+        return max(1, total)
+
+    # No season restriction — full series
+    if deal.episode_count:
+        return deal.episode_count
+    if deal.season_count and deal.episodes_per_season:
+        return deal.season_count * deal.episodes_per_season
+    if deal.season_count:
+        return deal.season_count * 10
+    return 10
+
+
+def compute_season_ratio(deal: DealRequest) -> Optional[float]:
+    """
+    Fraction of the show's total seasons being newly licensed.
+    Returns None for full-series deals (no discount applied).
+    """
+    if deal.content_type != "series":
+        return None
+    included = parse_included_seasons(deal.included_seasons or "")
+    if not included:
+        return None
+    total = deal.season_count
+    if not total or total <= 0:
+        return None
+    acquired = parse_included_seasons(deal.already_acquired_seasons or "")
+    if acquired:
+        net_new = [s for s in included if s not in acquired and 1 <= s <= total]
+        return min(len(net_new) / total, 1.0) if net_new else None
+    licensed = [s for s in included if 1 <= s <= total]
+    return min(len(licensed) / total, 1.0) if licensed else None
+
+
 def series_package_multiplier(deal: DealRequest) -> float:
     if deal.content_type != "series":
         return 1.0
-    total_episodes = deal.episode_count or (deal.season_count or 1) * (deal.episodes_per_season or 1)
+
+    net_episodes    = resolve_net_new_episodes(deal)
     runtime_minutes = deal.runtime_minutes or 45
-    package_minutes = total_episodes * runtime_minutes
-    # Scale with package size, but cap to avoid runaway valuations.
-    episodes_factor = 1.0 + min(log1p(total_episodes) / 5.0, 0.9)
-    runtime_factor = 1.0 + min(log1p(package_minutes) / 10.0, 0.5)
-    return round(min(episodes_factor * runtime_factor, 2.2), 3)
+    package_minutes = net_episodes * runtime_minutes
+
+    episodes_factor = 1.0 + min(log1p(net_episodes) / 5.0, 0.9)
+    runtime_factor  = 1.0 + min(log1p(package_minutes) / 10.0, 0.5)
+    base = round(min(episodes_factor * runtime_factor, 2.2), 3)
+
+    acquired     = parse_included_seasons(deal.already_acquired_seasons or "")
+    season_ratio = compute_season_ratio(deal)
+
+    if season_ratio is None:
+        return base  # Full series — no adjustment
+
+    if acquired:
+        # Incremental: continuation premium over cold standalone single-season value
+        standalone = round(1.0 + min(log1p(net_episodes) / 5.0, 0.9), 3)
+        return round(min(standalone * 1.10, base), 3)
+    else:
+        # Partial fresh deal: non-linear retained-value curve
+        retained = 0.4 + (season_ratio * 0.6)
+        return round(base * retained, 3)
 
 
 def compute_confidence(
@@ -645,6 +764,8 @@ def generate_deal_key(deal: DealRequest, normalized_region: str, normalized_plat
         "episodes_per_season": deal.episodes_per_season or 0,
         "episode_count": deal.episode_count or 0,
         "included_seasons": (deal.included_seasons or "").strip().lower(),
+        "already_acquired_seasons": (deal.already_acquired_seasons or "").strip().lower(),
+        "episode_overrides": json.dumps(deal.episode_overrides or {}, sort_keys=True),
         "license_duration": deal.license_duration.strip().lower(),
         "rights_type": deal.rights_type.strip().lower(),
         "language_rights": deal.language_rights.strip().lower(),
@@ -899,13 +1020,17 @@ def fetch_title_metadata(imdb_link: str) -> dict:
         total_seasons = int(data.get("totalSeasons", "0")) if str(data.get("totalSeasons", "")).isdigit() else None
 
         released_episode_count = None
+        season_episode_counts: dict[int, int] = {}
         if content_type == "series" and total_seasons and total_seasons > 0:
             released_count = 0
             for season_number in range(1, total_seasons + 1):
                 season_url = f"{base_url}&Season={season_number}"
                 season_data = fetch_json_with_retries(season_url, timeout=5, retries=1)
                 episodes = season_data.get("Episodes", []) if season_data else []
-                released_count += len(episodes)
+                count = len(episodes)
+                if count > 0:
+                    season_episode_counts[season_number] = count
+                released_count += count
             released_episode_count = released_count if released_count > 0 else None
 
         tmdb_link = ""
@@ -931,6 +1056,7 @@ def fetch_title_metadata(imdb_link: str) -> dict:
             "runtime_minutes": runtime_minutes,
             "total_seasons": total_seasons,
             "released_episode_count": released_episode_count,
+            "season_episode_counts": season_episode_counts,
             "released_label": data.get("Released", ""),
             "tmdb_link": tmdb_link,
         }
@@ -1118,19 +1244,11 @@ def estimate(deal: DealRequest):
         title_metadata = fetch_title_metadata(deal.imdb_link)
         if deal.content_type == "series":
             released_cap = title_metadata.get("released_episode_count") if title_metadata else None
-            if released_cap and deal.episode_count and deal.episode_count > released_cap:
-                raise HTTPException(
-                    status_code=422,
-                    detail=f"Episode count cannot exceed released episodes ({released_cap}) for this title",
-                )
-            if released_cap and deal.season_count and not deal.episode_count:
-                # Guardrail when episode_count is derived from season inputs only.
-                derived_episodes = (deal.season_count or 0) * (deal.episodes_per_season or 0)
-                if derived_episodes > released_cap:
-                    raise HTTPException(
-                        status_code=422,
-                        detail=f"Derived episodes ({derived_episodes}) exceed released episodes ({released_cap})",
-                    )
+            # Sync per-season breakdown from IMDb if frontend didn't send it
+            if (title_metadata and title_metadata.get("season_episode_counts")
+                    and not deal.season_episode_counts):
+                object.__setattr__(deal, "season_episode_counts",
+                                   title_metadata["season_episode_counts"])
 
         deal_key = generate_deal_key(deal, resolved_country_name, normalized_platforms)
         cached_response = get_cached_estimate(deal_key)
@@ -1159,7 +1277,12 @@ def estimate(deal: DealRequest):
         language_factor = language_multiplier(deal.language_rights)
         license_factor = license_multiplier(deal.license_duration)
         market_factor = market_info["factor"]
-        package_factor = series_package_multiplier(deal)
+        package_factor  = series_package_multiplier(deal)
+        season_ratio    = compute_season_ratio(deal)
+        acquired_list   = parse_included_seasons(deal.already_acquired_seasons or "")
+        included_list   = parse_included_seasons(deal.included_seasons or "")
+        net_new_list    = [s for s in included_list if s not in acquired_list] if acquired_list else []
+        net_episodes    = resolve_net_new_episodes(deal)
         multiplier = (
             platform_factor
             * rights_factor
@@ -1224,6 +1347,38 @@ def estimate(deal: DealRequest):
                     "age": age_factor,
                     "combined": round(multiplier * age_factor, 4),
                 },
+                "season_context": (
+                    {
+                        "mode": "incremental",
+                        "included_seasons": deal.included_seasons,
+                        "already_acquired_seasons": deal.already_acquired_seasons,
+                        "net_new_seasons": net_new_list,
+                        "net_new_episodes": net_episodes,
+                        "note": (
+                            f"Incremental acquisition — "
+                            f"Season{'s' if len(net_new_list) > 1 else ''} "
+                            f"{', '.join(str(s) for s in net_new_list)} · "
+                            f"{net_episodes} episode{'s' if net_episodes != 1 else ''} · "
+                            f"Seasons {deal.already_acquired_seasons} already held by licensee."
+                        ),
+                    }
+                    if acquired_list and included_list
+                    else {
+                        "mode": "partial",
+                        "included_seasons": deal.included_seasons,
+                        "season_ratio_pct": round((season_ratio or 1.0) * 100),
+                        "net_new_episodes": net_episodes,
+                        "note": (
+                            f"Partial series — "
+                            f"Season{'s' if len(included_list) > 1 else ''} "
+                            f"{deal.included_seasons} of {deal.season_count} total · "
+                            f"{round((season_ratio or 1.0) * 100)}% coverage · "
+                            f"{net_episodes} episode{'s' if net_episodes != 1 else ''} priced."
+                        ),
+                    }
+                    if season_ratio is not None
+                    else None
+                ),
             },
             "confidence_level": confidence,
             "reasoning": reasoning,
@@ -1253,3 +1408,369 @@ def estimate(deal: DealRequest):
         METRICS["estimate_errors"] += 1
         log_event("estimate_failed", error=str(exc))
         raise HTTPException(status_code=500, detail="Unable to generate estimate at this time")
+    
+ 
+# ══════════════════════════════════════════════════════════════════════════════
+# ── PDF Deal Memo ─────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+from io import BytesIO
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
+from reportlab.platypus import (
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
+    HRFlowable, KeepTogether,
+)
+ 
+# ── Brand palette ──────────────────────────────────────────────────────────────
+_DARK        = colors.HexColor("#0b1018")
+_MID         = colors.HexColor("#111927")
+_ACCENT      = colors.HexColor("#6f90ff")
+_ACCENT_SOFT = colors.HexColor("#1a2f5a")
+_TEXT        = colors.HexColor("#1a2840")
+_MUTED       = colors.HexColor("#5a6a82")
+_BORDER      = colors.HexColor("#c8d3e8")
+_ROW_ALT     = colors.HexColor("#f4f6fb")
+_GREEN       = colors.HexColor("#1d9e75")
+_AMBER       = colors.HexColor("#ba7517")
+_RED         = colors.HexColor("#d85a30")
+_WHITE       = colors.white
+ 
+ 
+def _styles() -> dict:
+    base = getSampleStyleSheet()
+    def s(name, **kw):
+        return ParagraphStyle(name, parent=base["Normal"], **kw)
+    return {
+        "cover_eyebrow": s("cover_eyebrow",
+            fontName="Helvetica-Bold", fontSize=8, leading=12,
+            textColor=colors.HexColor("#aabbd4"),
+            spaceAfter=6, letterSpacing=1.4),
+        "cover_title": s("cover_title",
+            fontName="Helvetica-Bold", fontSize=24, leading=30,
+            textColor=_WHITE, spaceAfter=4),
+        "cover_sub": s("cover_sub",
+            fontName="Helvetica", fontSize=10, leading=15,
+            textColor=colors.HexColor("#aabbd4"), spaceAfter=2),
+        "section_head": s("section_head",
+            fontName="Helvetica-Bold", fontSize=8, leading=11,
+            textColor=_ACCENT, spaceBefore=20, spaceAfter=8,
+            letterSpacing=0.9),
+        "kv_key": s("kv_key",
+            fontName="Helvetica-Bold", fontSize=9, leading=13,
+            textColor=_MUTED),
+        "kv_val": s("kv_val",
+            fontName="Helvetica", fontSize=9, leading=13,
+            textColor=_TEXT),
+        "price_label": s("price_label",
+            fontName="Helvetica-Bold", fontSize=7.5, leading=10,
+            textColor=_MUTED, spaceAfter=3, letterSpacing=0.5),
+        "price_val": s("price_val",
+            fontName="Helvetica-Bold", fontSize=15, leading=20,
+            textColor=_TEXT),
+        "conf_high": s("conf_high",
+            fontName="Helvetica-Bold", fontSize=15, leading=20, textColor=_GREEN),
+        "conf_medium": s("conf_medium",
+            fontName="Helvetica-Bold", fontSize=15, leading=20, textColor=_AMBER),
+        "conf_low": s("conf_low",
+            fontName="Helvetica-Bold", fontSize=15, leading=20, textColor=_RED),
+        "confidence": s("confidence",
+            fontName="Helvetica-Bold", fontSize=15, leading=20, textColor=_MUTED),
+        "reasoning": s("reasoning",
+            fontName="Helvetica", fontSize=9.5, leading=15,
+            textColor=_TEXT),
+        "banner": s("banner",
+            fontName="Helvetica", fontSize=9, leading=14,
+            textColor=colors.HexColor("#1a5c3a")),
+        "disclaimer": s("disclaimer",
+            fontName="Helvetica-Oblique", fontSize=7.5, leading=11,
+            textColor=_MUTED),
+    }
+ 
+ 
+def _kv_table(rows: list[tuple[str, str]], S: dict, inner_w: float) -> Table:
+    """Alternating-row key/value table."""
+    data = [[Paragraph(k, S["kv_key"]), Paragraph(v, S["kv_val"])] for k, v in rows]
+    col_w = [inner_w * 0.36, inner_w * 0.64]
+    tbl = Table(data, colWidths=col_w)
+    cmds = [
+        ("VALIGN",         (0, 0), (-1, -1), "TOP"),
+        ("TOPPADDING",     (0, 0), (-1, -1), 5),
+        ("BOTTOMPADDING",  (0, 0), (-1, -1), 5),
+        ("LEFTPADDING",    (0, 0), (-1, -1), 9),
+        ("RIGHTPADDING",   (0, 0), (-1, -1), 9),
+        ("LINEBELOW",      (0, 0), (-1, -2), 0.3, colors.HexColor("#dde3ef")),
+    ]
+    for i in range(0, len(data), 2):
+        cmds.append(("BACKGROUND", (0, i), (-1, i), _ROW_ALT))
+    tbl.setStyle(TableStyle(cmds))
+    return tbl
+ 
+ 
+def _season_context_block(sc: dict, S: dict, inner_w: float):
+    """Green banner for incremental / amber for partial season deals."""
+    if not sc:
+        return None
+    if sc.get("mode") == "incremental":
+        new_s = sc.get("net_new_seasons", [])
+        n_ep  = sc.get("net_new_episodes", "?")
+        held  = sc.get("already_acquired_seasons", "")
+        text  = (f"Incremental acquisition — "
+                 f"Season{'s' if len(new_s) > 1 else ''} "
+                 f"{', '.join(str(x) for x in new_s)} · "
+                 f"{n_ep} episode{'s' if n_ep != 1 else ''} · "
+                 f"Seasons {held} already held by licensee.")
+        bg, border = colors.HexColor("#e8f7f1"), colors.HexColor("#5ccf9f")
+        style = ParagraphStyle("sc_inc", parent=S["banner"],
+                               textColor=colors.HexColor("#0d5c3a"))
+    elif sc.get("mode") == "partial":
+        inc = sc.get("included_seasons", "")
+        pct = sc.get("season_ratio_pct", "?")
+        n_ep = sc.get("net_new_episodes", "?")
+        text = (f"Partial series — Seasons {inc} · "
+                f"{pct}% season coverage · {n_ep} episodes priced.")
+        bg, border = colors.HexColor("#fdf6e3"), colors.HexColor("#e6b84a")
+        style = ParagraphStyle("sc_par", parent=S["banner"],
+                               textColor=colors.HexColor("#7a4f00"))
+    else:
+        return None
+ 
+    box = Table([[Paragraph(text, style)]], colWidths=[inner_w])
+    box.setStyle(TableStyle([
+        ("BACKGROUND",    (0, 0), (-1, -1), bg),
+        ("TOPPADDING",    (0, 0), (-1, -1), 9),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 9),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 12),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 12),
+        ("LINEBEFORE",    (0, 0), (0, -1),  3, border),
+        ("BOX",           (0, 0), (-1, -1), 0.5, border),
+        ("ROUNDEDCORNERS",(0, 0), (-1, -1), [4, 4, 4, 4]),
+    ]))
+    return box
+ 
+ 
+def generate_deal_memo_pdf(deal: DealRequest, result: dict) -> BytesIO:
+    buf = BytesIO()
+    page_w, _ = A4
+    margin     = 14 * mm
+    inner_w    = page_w - 2 * margin
+ 
+    doc = SimpleDocTemplate(
+        buf, pagesize=A4,
+        leftMargin=margin, rightMargin=margin,
+        topMargin=margin, bottomMargin=16 * mm,
+        title=f"Deal Memo — {deal.title}",
+        author="Film Licensing Pricing Engine",
+    )
+ 
+    S    = _styles()
+    pc   = result.get("pricing_components", {})
+    pe   = result.get("pricing_estimate", {})
+    sc   = pc.get("season_context")
+    mults = pc.get("multipliers", {})
+    conf  = result.get("confidence_level", "—")
+    conf_color = {
+        "High": _GREEN, "Medium": _AMBER, "Low": _RED
+    }.get(conf, _MUTED)
+ 
+    story = []
+ 
+    # ══════════════════════════════════════════════════════════
+    # COVER BAND
+    # ══════════════════════════════════════════════════════════
+    generated_str = datetime.now(tz=__import__('datetime').timezone.utc).strftime("%d %b %Y, %H:%M UTC")
+    cover_content = [
+        Paragraph("FILM LICENSING — DEAL MEMO", S["cover_eyebrow"]),
+        Paragraph(deal.title, S["cover_title"]),
+        Paragraph(f"{result.get('region', deal.region)}  ·  {deal.rights_type}  ·  {deal.license_duration}", S["cover_sub"]),
+        Paragraph(f"Generated {generated_str}", S["cover_sub"]),
+    ]
+    cover_tbl = Table([[cover_content]], colWidths=[inner_w])
+    cover_tbl.setStyle(TableStyle([
+        ("BACKGROUND",    (0, 0), (-1, -1), _DARK),
+        ("TOPPADDING",    (0, 0), (-1, -1), 20),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 20),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 18),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 18),
+        ("ROUNDEDCORNERS",(0, 0), (-1, -1), [8, 8, 8, 8]),
+    ]))
+    story.append(cover_tbl)
+    story.append(Spacer(1, 12))
+ 
+    # ══════════════════════════════════════════════════════════
+    # PRICING SUMMARY — 4-column grid
+    # ══════════════════════════════════════════════════════════
+    conf_style = {
+        "High":   S["conf_high"],
+        "Medium": S["conf_medium"],
+        "Low":    S["conf_low"],
+    }.get(conf, S["confidence"])
+ 
+    conf_hex  = "%02x%02x%02x" % (
+        int(conf_color.red * 255),
+        int(conf_color.green * 255),
+        int(conf_color.blue * 255),
+    )
+    conf_para = Paragraph(conf, conf_style)
+ 
+    price_rows = [
+        [Paragraph("FLAT FEE RANGE",   S["price_label"]),
+         Paragraph("MIN GUARANTEE",    S["price_label"]),
+         Paragraph("REVENUE SHARE",    S["price_label"]),
+         Paragraph("CONFIDENCE",       S["price_label"])],
+        [Paragraph(pe.get("flat_fee_range",       "—"), S["price_val"]),
+         Paragraph(pe.get("minimum_guarantee",    "—"), S["price_val"]),
+         Paragraph(pe.get("revenue_share_range",  "—"), S["price_val"]),
+         conf_para],
+    ]
+    price_tbl = Table(price_rows, colWidths=[inner_w / 4] * 4)
+    price_tbl.setStyle(TableStyle([
+        ("BACKGROUND",    (0, 0), (-1, -1), colors.HexColor("#eef2fb")),
+        ("TOPPADDING",    (0, 0), (-1, -1), 10),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 12),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 12),
+        ("LINEBEFORE",    (1, 0), (3, -1),  0.4, _BORDER),
+        ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+        ("ROUNDEDCORNERS",(0, 0), (-1, -1), [6, 6, 6, 6]),
+    ]))
+    story.append(KeepTogether([
+        Paragraph("PRICING ESTIMATE", S["section_head"]),
+        price_tbl,
+    ]))
+ 
+    # ══════════════════════════════════════════════════════════
+    # SEASON CONTEXT BANNER (incremental / partial)
+    # ══════════════════════════════════════════════════════════
+    sc_block = _season_context_block(sc, S, inner_w)
+    if sc_block:
+        story.append(Spacer(1, 10))
+        story.append(sc_block)
+ 
+    # ══════════════════════════════════════════════════════════
+    # DEAL PARAMETERS
+    # ══════════════════════════════════════════════════════════
+    platforms_str = ", ".join(deal.platforms) if deal.platforms else "—"
+    deal_rows: list[tuple[str, str]] = [
+        ("Territory",        result.get("region", deal.region)),
+        ("Market tier",      result.get("market_tier", "—").capitalize()),
+        ("Rights type",      deal.rights_type),
+        ("License duration", deal.license_duration),
+        ("Language rights",  deal.language_rights),
+        ("Platform(s)",      platforms_str),
+        ("Content type",     deal.content_type.capitalize()),
+    ]
+    if deal.content_type == "series":
+        if deal.season_count:
+            deal_rows.append(("Total seasons", str(deal.season_count)))
+        if deal.included_seasons:
+            deal_rows.append(("Seasons in deal", deal.included_seasons))
+        if deal.already_acquired_seasons:
+            deal_rows.append(("Already acquired", deal.already_acquired_seasons))
+        # Per-season breakdown from IMDb
+        if deal.season_episode_counts:
+            breakdown_str = ", ".join(
+                f"S{k}: {v} ep"
+                for k, v in sorted(deal.season_episode_counts.items(), key=lambda x: int(x[0]))
+            )
+            deal_rows.append(("Episode breakdown", breakdown_str))
+        if deal.episode_overrides:
+            overrides_str = ", ".join(
+                f"S{k}: {v} ep (override)"
+                for k, v in sorted(deal.episode_overrides.items(), key=lambda x: int(x[0]))
+            )
+            deal_rows.append(("Episode overrides", overrides_str))
+    if deal.runtime_minutes:
+        deal_rows.append(("Avg episode runtime", f"{deal.runtime_minutes} min"))
+    deal_rows.append(("IMDb", deal.imdb_link))
+    if deal.tmdb_link:
+        deal_rows.append(("TMDB", deal.tmdb_link))
+ 
+    story.append(KeepTogether([
+        Paragraph("DEAL PARAMETERS", S["section_head"]),
+        _kv_table(deal_rows, S, inner_w),
+    ]))
+ 
+    # ══════════════════════════════════════════════════════════
+    # PRICING COMPONENTS
+    # ══════════════════════════════════════════════════════════
+    comp_rows: list[tuple[str, str]] = [
+        ("Content score",    f"{pc.get('score', '—')}/100"),
+        ("Base price range", pc.get("base_price_range", "—")),
+        ("Platform ×",       str(mults.get("platform",  "—"))),
+        ("Rights ×",         str(mults.get("rights",    "—"))),
+        ("Language ×",       str(mults.get("language",  "—"))),
+        ("License ×",        str(mults.get("license",   "—"))),
+        ("Market ×",         str(mults.get("market",    "—"))),
+        ("Package ×",        str(mults.get("package",   "—"))),
+        ("Age ×",            str(mults.get("age",       "—"))),
+        ("Combined ×",       str(mults.get("combined",  "—"))),
+    ]
+    story.append(KeepTogether([
+        Paragraph("PRICING COMPONENTS", S["section_head"]),
+        _kv_table(comp_rows, S, inner_w),
+    ]))
+ 
+    # ══════════════════════════════════════════════════════════
+    # ANALYST REASONING
+    # ══════════════════════════════════════════════════════════
+    reasoning_text = result.get("reasoning", "").strip()
+    if reasoning_text:
+        reasoning_box = Table(
+            [[Paragraph(reasoning_text, S["reasoning"])]],
+            colWidths=[inner_w],
+        )
+        reasoning_box.setStyle(TableStyle([
+            ("BACKGROUND",    (0, 0), (-1, -1), colors.HexColor("#f7f9ff")),
+            ("TOPPADDING",    (0, 0), (-1, -1), 14),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 14),
+            ("LEFTPADDING",   (0, 0), (-1, -1), 16),
+            ("RIGHTPADDING",  (0, 0), (-1, -1), 16),
+            ("LINEBEFORE",    (0, 0), (0, -1),  4, _ACCENT),
+            ("ROUNDEDCORNERS",(0, 0), (-1, -1), [4, 4, 4, 4]),
+        ]))
+        story.append(KeepTogether([
+            Paragraph("ANALYST REASONING", S["section_head"]),
+            reasoning_box,
+        ]))
+ 
+    # ══════════════════════════════════════════════════════════
+    # FOOTER — disclaimer + model version
+    # ══════════════════════════════════════════════════════════
+    story.append(Spacer(1, 18))
+    story.append(HRFlowable(width="100%", thickness=0.4, color=_BORDER))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(
+        f"This memo is a non-binding pricing estimate generated by an automated model. "
+        f"All figures are indicative only and subject to negotiation. "
+        f"Model version: {result.get('model_version', '—')}.",
+        S["disclaimer"],
+    ))
+ 
+    doc.build(story)
+    buf.seek(0)
+    return buf
+ 
+ 
+# ── Memo endpoint ──────────────────────────────────────────────────────────────
+class MemoRequest(BaseModel):
+    deal:   DealRequest
+    result: dict
+ 
+ 
+@app.post("/export-memo")
+def export_memo(body: MemoRequest):
+    """Generate and stream a PDF deal memo for a completed pricing estimate."""
+    try:
+        safe_title = re.sub(r"[^\w\-. ]", "_", body.deal.title)[:60].strip()
+        filename   = f"deal_memo_{safe_title}.pdf".replace(" ", "_")
+        buf        = generate_deal_memo_pdf(body.deal, body.result)
+        return StreamingResponse(
+            buf,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+    except Exception as exc:
+        log_event("export_memo_failed", error=str(exc))
+        raise HTTPException(status_code=500, detail=f"Unable to generate deal memo: {exc}")

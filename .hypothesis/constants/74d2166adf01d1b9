@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\_client.py
+# hypothesis_version: 6.142.4
+
+[400, 401, 403, 404, 409, 422, 429, 500, 'AsyncClient', 'Authorization', 'Client', 'GEMINI_API_KEY', 'ProxiesTypes', 'RequestOptions', 'Timeout', 'Transport', 'comma', 'v1beta', 'x-goog-api-key']

@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\_utils\_path.py
+# hypothesis_version: 6.142.4
+
+["!$&'()*+,;=:@", "!$&'()*+,;=:@/?", "!$'()*+,;:@/?", '#', '/', '?', '\\{(\\w+)\\}', '^(?:\\.|%2[eE]){1,2}$', 'false', 'null', 'true']

@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\resources\embeddings.py
+# hypothesis_version: 6.142.4
+
+['AsyncEmbeddings', 'Embeddings', 'base64', 'encoding_format', 'float', 'input', 'model', 'user']

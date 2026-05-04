@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\resources\interactions.py
+# hypothesis_version: 6.142.4
+
+['InteractionsResource', 'agent', 'agent_config', 'audio', 'background', 'document', 'flex', 'generation_config', 'image', 'include_input', 'input', 'interactions', 'last_event_id', 'model', 'priority', 'response_format', 'response_mime_type', 'response_modalities', 'service_tier', 'standard', 'store', 'stream', 'system_instruction', 'text', 'tools', 'video', 'webhook_config']

@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\coercions.py
+# hypothesis_version: 6.142.4
+
+['%s ', '%s expected, got %s.', '*', '1.4', '89ve', 'Impl', 'Role', 'Sequence[_T]', '^\\w\\S*$', '_F', '_SR', '_StringOnlyR', '_T', '__clause_element__', '__code__', '_propagate_attrs', '_role_class', '_use_inspection', 'argname', 'as_key', 'column', 'dml_table', 'expr', 'extra', 'for argument %s', 'is_clause_element', 'literal_column', 'name']

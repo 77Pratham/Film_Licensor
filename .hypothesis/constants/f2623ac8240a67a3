@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\types\batch_list_response.py
+# hypothesis_version: 6.142.4
+
+['BatchListResponse', 'Data', 'DataErrors', 'DataErrorsData', 'DataRequestCounts', 'batch', 'cancelled', 'cancelling', 'completed', 'expired', 'failed', 'finalizing', 'in_progress', 'list', 'validating']

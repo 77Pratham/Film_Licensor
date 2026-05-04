@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\types\chat\completion_create_params.py
+# hypothesis_version: 6.142.4
+
+['CompoundCustom', 'CompoundCustomModels', 'CompoundCustomTools', 'Document', 'DocumentSource', 'Function', 'FunctionCall', 'ResponseFormat', 'SearchSettings', 'auto', 'compound-beta', 'compound-beta-mini', 'default', 'disabled', 'enabled', 'flex', 'gemma2-9b-it', 'hidden', 'high', 'json', 'json_object', 'json_schema', 'llama-3.1-8b-instant', 'low', 'medium', 'none', 'on_demand', 'openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'parsed', 'performance', 'qwen/qwen3-32b', 'raw', 'required', 'text']

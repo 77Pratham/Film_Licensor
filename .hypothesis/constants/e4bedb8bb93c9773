@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\result.py
+# hypothesis_version: 6.142.4
+
+['Result[Any]', 'Type[Any]', '_R', '_T', '_TP', '__dict__', '_filter_on_values', '_key_to_index', '_keymap', '_keys', '_mapping', '_metadata', '_parent', '_processors', '_real_result', '_translated_indexes', '_tuplefilter', '_unique_filter_state', '_unique_filters']

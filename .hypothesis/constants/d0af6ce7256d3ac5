@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\dialects\sqlite\pysqlite.py
+# hypothesis_version: 6.142.4
+
+['$1', '%s=%s', '&', ':1', ':memory:', '?', 'AUTOCOMMIT', 'DBAPIModule', '[^\\d]:\\d+', '_CursorT', 'cached_statements', 'check_same_thread', 'detect_types', 'deterministic', 'factory', 'floor', 'isolation_level', 'memory', 'mode', 'numeric', 'numeric_dollar', 'paramstyle', 'pysqlite', 'pysqlite_dollar', 'pysqlite_numeric', 'qmark', 'regexp', 'timeout', 'uri']

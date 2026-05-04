@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\util\compat.py
+# hypothesis_version: 6.142.4
+
+[' -> ', '(', ')', '*', '**', ', ', '.', ': ', '=', 'CPython', 'Mapping[str, Any]', 'PyPy', 'Py_GIL_DISABLED', '_T_co', '__annotate__', '__annotations__', '__module__', 'aarch', 'ascii', 'backslashreplace', 'beta', 'builtins', 'darwin', 'latin-1', 'return', 'select', 'typing', 'typing.', 'win', '~']

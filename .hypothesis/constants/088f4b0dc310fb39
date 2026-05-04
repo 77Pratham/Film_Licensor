@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\reportlab\pdfgen\textobject.py
+# hypothesis_version: 6.142.4
+
+[1.2, 100, 1000, ' T*', ' Td', ' Ts', '%d Tr', '%s\n%s-->%s<--%s', '%s %s Tf', '%s %s Tf %s TL', '%s G', '%s K', '%s RG', '%s T*', '%s TL', '%s Tc', '%s Td', '%s Tm', '%s Tw', '%s Tz', '%s g', '%s k', '%s rg', '%s%s', '(', '(%s)', '(%s) Tj', '/%s CS %s SCN', '/%s cs %s scn', '0', '1 0 0 -1 %s Tm', '1 0 0 1 %s Tm', '3.3.0', 'BT', 'ET', 'Helvetica', 'LTR', 'OP', 'OPM', 'RTL', 'Unknown color %r', '[^ ]+', '__shapeData__', '_enforceColorSpace', '_setFillAlpha', '_setFillOverprint', '_setOverprintMask', '_setStrokeAlpha', '_setStrokeOverprint', 'alpha', 'ca', 'cbDefn', 'direction', 'latin1', 'op', 'transparency', 'utf8', 'width']

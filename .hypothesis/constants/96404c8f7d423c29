@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\cryptography\x509\name.py
+# hypothesis_version: 6.142.4
+
+['\x00', '"', '#', '#([\\da-zA-Z]{2})+', '+', ',', ';', '<', '=', '>', 'C', 'CN', 'DC', 'L', 'O', 'OU', 'ST', 'STREET', 'UID', '[a-zA-Z][a-zA-Z\\d-]*', '\\', '\\ ', '\\"', '\\+', '\\,', '\\00', '\\;', '\\<', '\\>', '\\\\', 'utf8']

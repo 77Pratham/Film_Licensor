@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\resources\audio\translations.py
+# hypothesis_version: 6.142.4
+
+['AsyncTranslations', 'Content-Type', 'Translations', 'file', 'json', 'model', 'multipart/form-data', 'prompt', 'response_format', 'temperature', 'text', 'url', 'verbose_json', 'whisper-large-v3']

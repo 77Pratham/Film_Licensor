@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\errors.py
+# hypothesis_version: 6.142.4
+
+[200, 400, 500, 600, 'APIError', 'ReplayResponse', '_response', 'body_segments', 'code', 'error', 'message', 'status', 'status_code']

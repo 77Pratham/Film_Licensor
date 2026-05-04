@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\websockets\protocol.py
+# hypothesis_version: 6.142.4
+
+['< %s', '< EOF', '= connection is %s', '> %s', '> EOF', 'Protocol', 'SEND_EOF', 'Side', 'State', 'parser failed']

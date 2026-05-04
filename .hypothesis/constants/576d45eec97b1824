@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\dialects\sqlite\pysqlcipher.py
+# hypothesis_version: 6.142.4
+
+['cipher', 'cipher_page_size', 'cipher_use_hmac', 'kdf_iter', 'pragma %s="%s"', 'pragma key="%s"', 'pysqlcipher']

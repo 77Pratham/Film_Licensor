@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\auth\transport\requests.py
+# hypothesis_version: 6.142.4
+
+[120, 'GET', 'https://', 'https://{}/', 'session', 'ssl_context']

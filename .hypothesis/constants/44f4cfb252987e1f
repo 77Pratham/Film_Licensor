@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\types\webhook_create_params.py
+# hypothesis_version: 6.142.4
+
+['WebhookCreateParams', 'batch.cancelled', 'batch.expired', 'batch.failed', 'batch.succeeded', 'disabled', 'enabled', 'interaction.failed', 'video.generated']

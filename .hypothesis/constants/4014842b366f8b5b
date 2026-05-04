@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\types\batch_retrieve_response.py
+# hypothesis_version: 6.142.4
+
+['Errors', 'ErrorsData', 'RequestCounts', 'batch', 'cancelled', 'cancelling', 'completed', 'expired', 'failed', 'finalizing', 'in_progress', 'validating']

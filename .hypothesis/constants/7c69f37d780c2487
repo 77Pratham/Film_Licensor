@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\ddl.py
+# hypothesis_version: 6.142.4
+
+[', ', '<%s@%s; %s>', 'Column[Any]', 'Constraint', 'Index', 'SchemaItem', 'Sequence', 'Table', '_SI', '_ddl_if', 'add_constraint', 'create_column', 'create_index', 'create_schema', 'create_sequence', 'create_table', 'ddl', 'default', 'drop_column_comment', 'drop_constraint', 'drop_index', 'drop_schema', 'drop_sequence', 'drop_table', 'drop_table_comment', 'drop_view', 'indexes', 'set_column_comment', 'set_table_comment']

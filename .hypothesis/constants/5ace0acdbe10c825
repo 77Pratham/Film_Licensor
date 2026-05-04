@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\types\audio_content.py
+# hypothesis_version: 6.142.4
+
+['AudioContent', 'audio', 'audio/aac', 'audio/aiff', 'audio/alaw', 'audio/flac', 'audio/l16', 'audio/m4a', 'audio/mp3', 'audio/mpeg', 'audio/mulaw', 'audio/ogg', 'audio/opus', 'audio/wav']

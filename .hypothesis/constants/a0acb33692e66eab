@@ -1,0 +1,4 @@
+# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\types\google_search_call_content_param.py
+# hypothesis_version: 6.142.4
+
+['base64', 'google_search_call', 'image_search', 'web_search']
