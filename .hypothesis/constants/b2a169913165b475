@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\events.py
-# hypothesis_version: 6.142.4
-
-['1.4', '2.0', 'SomeEngine', 'before_execute', 'branch', 'clauseelement', 'conn', 'handle_error', 'multiparams', 'params', 'result']

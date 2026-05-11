@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\reportlab\lib\normalDate.py
-# hypothesis_version: 6.142.4
-
-[365.2425, -4345732, -693597, -115860, -115857, -115783, -9999, 100, 365, 399, 400, 1582, 1600, 9999, 109573, 692502, 693596, 693963, 695058, 2958463, 15821018, '%02d', '%04d%02d%02d', '%08d', '%09d', '%s/%s/%s', '+', '-', '01', '20010116', '3.3.18', 'NormalDate test:', '__main__', '_dayOfWeekName', '_fmt', '_monthName', 'b.scalar()', 'b=', 'normalDate', 'struct_time', '{dddd} {d}/{m}/{yy}', '{ddd} {d}/{m}/{yy}', '{dd}/{m}/{yy}', '{d}/{mmmm}/{yy}', '{d}/{mmm}/{yy}', '{d}/{mm}/{yy}', '{d}/{m}/{yyyy}', '{d}/{m}/{yy}']

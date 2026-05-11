@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\documents.py
-# hypothesis_version: 6.142.4
-
-['_query', '_url', 'config', 'delete', 'documents', 'force', 'get', 'include_all_fields', 'name', 'nextPageToken', 'next_page_token', 'pageSize', 'pageToken', 'page_size', 'page_token', 'parent', 'response_json_schema', 'response_schema', 'sdkHttpResponse', 'sdk_http_response', '{name}', '{parent}/documents']

@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\url.py
-# hypothesis_version: 6.142.4
-
-[' +', '%s must be a string', '&', '***', '+', '.', '/', '1.4', ':', '://', '?', '@', 'List[str]', 'Type[Dialect]', 'database', 'dialect', 'drivername', 'host', 'ipv4host', 'ipv6host', 'name', 'password', 'plugin', 'plugins', 'port', 'query', 'username']

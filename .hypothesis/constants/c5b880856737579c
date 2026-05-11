@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\_client.py
-# hypothesis_version: 6.142.4
-
-[400, 401, 403, 404, 409, 422, 429, 500, 'AsyncClient', 'AsyncGroq', 'Authorization', 'Client', 'GROQ_API_KEY', 'GROQ_BASE_URL', 'Groq', 'ProxiesTypes', 'RequestOptions', 'Timeout', 'Transport', 'X-Stainless-Async', 'comma', 'false']

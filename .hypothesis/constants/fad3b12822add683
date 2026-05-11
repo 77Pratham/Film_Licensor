@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\reflection.py
-# hypothesis_version: 6.142.4
-
-[0.5, 100, '.', '1.4', 'Inspector', '_R', 'asc', 'autoincrement', 'column_names', 'column_sorting', 'comment', 'computed', 'constrained_columns', 'default', 'desc', 'dialect_options', 'duplicates_index', 'exec_driver_sql', 'expressions', 'identity', 'index', 'info', 'info_cache', 'inspector', 'key', 'name', 'nullable', 'nulls_first', 'nulls_last', 'options', 'quote', 'referred_columns', 'referred_schema', 'referred_table', 'schema', 'text', 'type', 'unique', 'unreflectable']

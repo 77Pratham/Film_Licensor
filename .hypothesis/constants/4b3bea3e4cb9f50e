@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\fastapi\sse.py
-# hypothesis_version: 6.142.4
-
-[b': ping\n\n', 15.0, '\x00', 'ServerSentEvent', 'after', 'data', 'event', 'id', 'integer', 'minimum', 'object', 'properties', 'retry', 'string', 'text/event-stream', 'type', 'utf-8']

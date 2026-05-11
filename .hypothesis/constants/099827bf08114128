@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\_response.py
-# hypothesis_version: 6.142.4
-
-['*', ';', 'APIResponse[Any]', 'P', 'R', '_APIResponseT', '_AsyncAPIResponseT', '_T', 'content-type', 'extra_headers', 'json', 'raw', 'stream', 'true', 'tuple[type, ...]', 'wb']

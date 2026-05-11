@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\types\tool_param.py
-# hypothesis_version: 6.142.4
-
-['CodeExecution', 'ComputerUse', 'FileSearch', 'GoogleMaps', 'GoogleSearch', 'MCPServer', 'Retrieval', 'ToolParam', 'URLContext', 'browser', 'code_execution', 'computer_use', 'file_search', 'google_maps', 'google_search', 'image_search', 'mcp_server', 'retrieval', 'url_context', 'vertex_ai_search', 'web_search']

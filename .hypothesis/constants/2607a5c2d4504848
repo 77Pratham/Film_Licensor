@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\util\deprecations.py
-# hypothesis_version: 6.142.4
-
-['"%s"', '()', '1.4', '2.0', ':attr:', ':ref:`(.+) <.*>`', 'Callable[..., Any]', '^:(attr|func|meth):', '_F', '_T', '__dict__', '__doc__', '__init__', '__weakref__', '_sa_skip_warning', 'attr', 'attribute', 'construct', 'enable_warnings', 'func', 'function', 'meth', 'method']

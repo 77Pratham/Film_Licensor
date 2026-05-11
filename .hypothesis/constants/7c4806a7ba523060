@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\types\video_content_param.py
-# hypothesis_version: 6.142.4
-
-['VideoContentParam', 'base64', 'high', 'low', 'medium', 'ultra_high', 'video', 'video/3gpp', 'video/avi', 'video/mov', 'video/mp4', 'video/mpeg', 'video/mpg', 'video/webm', 'video/wmv', 'video/x-flv']

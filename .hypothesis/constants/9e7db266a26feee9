@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\base.py
-# hypothesis_version: 6.142.4
-
-[500, ' (insertmanyvalues)', '8s2b', 'AUTOCOMMIT', 'BEGIN (implicit)', 'COMMIT', 'Engine(%r)', 'Error closing cursor', 'Inspector', 'ROLLBACK', '[%s] %r', '[raw sql] %r', '_ConnectionFairy', '_T', '_has_events', '_is_prepared', '_previous_nested', '_savepoint', 'chained_exception', 'compiled_cache', 'connection', 'cursor', 'dialect', 'engine', 'execution_context', 'is_active', 'is_disconnect', 'is_pre_ping', 'isolation_level', 'max_row_buffer', 'original_exception', 'parameters', 'preserve_rowcount', 'sa_savepoint_%s', 'savepoint ', 'schema_translate_map', 'sqlalchemy_exception', 'stacklevel', 'statement', 'stream_results', 'xid', 'yield_per']

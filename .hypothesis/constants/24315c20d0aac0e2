@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\_typing.py
-# hypothesis_version: 6.142.4
-
-['*', 'Alias', 'CTE', 'ClauseElement', 'ColumnElement[Any]', 'ColumnElement[_T]', 'Column[Any]', 'CompoundSelect[_TP]', 'Connection', 'Decimal', 'Engine', 'Join', 'LambdaElement', 'MockConnection', 'Select[_TP]', 'TableClause', 'TextClause', 'TypeEngine[_T]', 'UUID', '_CE', '_CLE', '_DMLKey', '_MAYBE_ENTITY', '_NOT_ENTITY', '_T', '_T0', '_T1', '_T2', '_T3', '_T4', '_T5', '_T6', '_T7', '_T8', '_T9', '_TP', '_T_co', '__clause_element__', '_is_column_element', '_is_from_clause', '_is_select_base', '_is_select_statement', '_is_subquery', '_is_table', '_is_table_value', '_is_text_clause', '_is_tuple_type', 'auto', 'date', 'datetime', 'ignore_fk', 'is_ddl', 'is_dml', 'is_selectable', 'is_sql', 'named_with_column', 'quote', 'schema', 'time', 'timedelta']

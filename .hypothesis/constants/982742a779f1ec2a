@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\visitors.py
-# hypothesis_version: 6.142.4
-
-['\n    ]\n', '    return [\n', ', \n', 'AK', 'AN', 'B', 'CD', 'CE', 'CL', 'CO', 'CT', 'CTS', 'ColumnElement[Any]', 'DD', 'DML_MV', 'DML_OV', 'DML_V', 'DO', 'EO', 'ExternalTraversal', 'FC', 'HC', 'HL', 'HT', 'IG', 'IL', 'IS', 'InternalTraversal', 'M', 'MD', 'ME', 'MT', 'O', 'PA', 'PD', 'PO', 'PS', 'S', 'SH', 'SJ', 'SL', 'T', 'TH', 'UK', 'Visitable', 'WC', '_CE', '_ET', '_ExtT', '__visit_name__', '_compiler_dispatch', '_next', '_visitor_dict', 'anon_map', 'cloned_traverse', 'dp_', 'iterate', 'replace', 'replacement_traverse', 'stop_on', 'traverse', 'traverse_using', 'visit_', 'visit_%s']

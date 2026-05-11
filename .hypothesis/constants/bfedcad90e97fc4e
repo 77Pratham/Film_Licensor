@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\resources\chat\completions.py
-# hypothesis_version: 6.142.4
-
-['AsyncCompletions', 'Completions', 'auto', 'citation_options', 'compound-beta', 'compound-beta-mini', 'compound_custom', 'default', 'disabled', 'documents', 'enabled', 'exclude_domains', 'flex', 'frequency_penalty', 'function_call', 'functions', 'gemma2-9b-it', 'hidden', 'high', 'include_domains', 'include_reasoning', 'llama-3.1-8b-instant', 'logit_bias', 'logprobs', 'low', 'max_tokens', 'medium', 'messages', 'metadata', 'model', 'n', 'none', 'on_demand', 'openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'parallel_tool_calls', 'parsed', 'performance', 'presence_penalty', 'qwen/qwen3-32b', 'raw', 'reasoning_effort', 'reasoning_format', 'response_format', 'search_settings', 'seed', 'service_tier', 'stop', 'store', 'stream', 'temperature', 'tool_choice', 'tools', 'top_logprobs', 'top_p', 'user']

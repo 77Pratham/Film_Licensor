@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\pool\base.py
-# hypothesis_version: 6.142.4
-
-['%s connection %r', '2.0', 'Closing', 'Hard-closing', 'Soft ', '__dict__', '__pool', '__weakref__', '_connection_record', '_counter', '_echo', '_is_valid', '_pool', 'asyncio_safe', 'commit', 'connection_record', 'dbapi_connection', 'fairy_ref', 'finalize_callback', 'fresh', 'is_valid', 'none', 'recycling', 'reset_on_return', 'rollback', 'starttime', 'terminate_only']

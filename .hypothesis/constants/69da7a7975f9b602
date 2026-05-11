@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\fastapi\utils.py
-# hypothesis_version: 6.142.4
-
-[200, 204, 205, 304, '1XX', '2XX', '3XX', '4XX', '5XX', 'APIRoute', '\\W', '_', 'default', 'serialization', 'validation', '{(.*?)}']

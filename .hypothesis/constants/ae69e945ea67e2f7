@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\reportlab\platypus\xpreformatted.py
-# hypothesis_version: 6.142.4
-
-[-0.2, 4.8, 42.8, 456.0, 360, 500, " %d:'%s'", " '%s'", '&', '&amp;', '&gt;', '&lt;', '3.5.20', '<', '</b></font>', '</font>', '<font color="black">', '<font color="gray">', '<font color="green">', '<font color="red">', '>', 'BodyText', 'Code', 'Helvetica', 'PythonPreformatted', 'XPreformatted', '__main__', 'autoLeading', 'cbDefn', 'comment', 'discussiontext', 'frag%d.%d: size=%d', "frag%d: '%s'", 'identifier', 'keyword', 'line%d: %d(%d)\n  ', 'lines', 'normalizedValue', 'off', 'parameter', 'rest', 'string', 'text', 'width']

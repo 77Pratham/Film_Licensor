@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\lambdas.py
-# hypothesis_version: 6.142.4
-
-[1000, '        return %s\n', '    (%s) = (%s)\n', '    def closure():\n', '%s(%r)', ', ', 'AnalyzedFunction', 'ClauseElement', 'NonAnalyzedFunction', '_E', '__', '__class__', '__clause_element__', '__dict__', '__getitem__', '_bind_paths', '_getter', '_name', '_param', '_py_wrapper_literal', '_resolved', '_sa_', '_to_evaluate', 'analyzed_code', 'bindparam_trackers', 'build_py_wrappers', 'closure_bindparams', 'closure_pywrappers', 'closure_trackers', 'def make_cells():\n', 'expected_expr', 'expr', 'fn', 'i%d', 'is_clause_element', 'is_sequence', 'lambda_element', 'make_cells', 'o%d', 'operate', 'propagate_attrs', 'reverse_operate', 'track_bound_values']

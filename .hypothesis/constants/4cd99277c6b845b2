@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\event\base.py
-# hypothesis_version: 6.142.4
-
-['%sDispatch', 'Joined%s', 'Type[_Dispatch[_ET]]', '_', '_Dispatch[_ET]', '__dict__', '__slots__', '_dispatch_target', '_empty_listeners', '_instance_cls', '_joined_dispatch_cls', '_parent', '_sa_event', '_slots_dispatch', 'dispatch', 'local', 'parent']

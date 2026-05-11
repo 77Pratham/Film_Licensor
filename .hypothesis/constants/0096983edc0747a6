@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\reportlab\lib\rl_accel.py
-# hypothesis_version: 6.142.4
-
-[b'\x00', 1e-07, 0.001, 0.25, 10.0, 127, 128, 255, 256, 65535, 65536, 16777215, 16777216, 4294967295, '\x00', '!', '!!!!!', '%.0f', '%.1f', '%.2f', '%.3f', '%.4f', '%.5f', '%.6f', '(', ')', ',', '-mtimeit', '-s', '.', '0', '0X%8.8X', ';', '>%dl', 'UCS-2', 'UTF16', '\\', '\\%03o', '__main__', '_rl_accel', '_rl_testing', 'add32', 'asciiBase85Decode', 'asciiBase85Encode', 'backColor', 'calcChecksum', 'calcChecksum(text)', 'cbDefn', 'dodgy code!', 'escapePDF', 'escapePDF(text)', 'f', 'font=fonts[0]', 'fontName', 'fontSize', 'fp_str', 'hex32', 'hex32(0x12345678)', 'latin1', 'lineBreak', 'link', 'nobr', 'rise', 'sameFrag', 'textColor', 'unicode2T1', 'us_lines', 'utf8', 'z', '~>']

@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\oauth2\_client.py
-# hypothesis_version: 6.142.4
-
-['Authorization', 'Bearer {}', 'Content-Type', 'GET', 'POST', 'access_token', 'application/json', 'assertion', 'audience', 'client_id', 'client_secret', 'decode', 'encodedLocations', 'error', 'error_description', 'exp', 'expires_in', 'grant_type', 'id_token', 'includeEmail', 'internal_failure', 'rapt', 'refresh_token', 'scope', 'server_error', 'token', 'true', 'useEmailAzp', 'utf-8', '{}: {}']

@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\dml.py
-# hypothesis_version: 6.142.4
-
-['*', '_T', '_hints', '_inline', '_multi_values', '_ordered_values', '_post_values_clause', '_return_defaults', '_returning', '_select_names', '_values', '_where_criteria', 'default', 'delete', 'expr', 'insert', 'isdelete', 'isinsert', 'isupdate', 'name', 'select', 'table', 'type', 'update', 'update_base', 'values_base']

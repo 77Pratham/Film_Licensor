@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\sql\base.py
-# hypothesis_version: 6.142.4
-
-['%s(%s)', '%s=%r', '%s_%s', '*', ', ', '2.1', 'ColumnClause[Any]', 'ColumnElement[Any]', 'NamedColumn[Any]', 'Options', '^(.+?)_(.+)$', '_', '_COL', '_COLKEY', '_COL_co', '_Fn', '_GenerativeType', '_NAMEDCOL', '_Self', '_SelfGenerativeType', '_T', '__', '_cache_key_traversal', '_collection', '_colset', '_index', '_parent', '_propagate_attrs', '_proxy_index', '_with_options', 'anon_map', 'clientside', 'column', 'compile_state_plugin', 'compiled_cache', 'default', 'defaults', 'dialect_options', 'entity_namespace', 'executable_option', 'identity', 'isolation_level', 'msgs', 'none', 'obj', 'proxy_set', 'schema_visitor', 'sentinel_default', 'sequence', 'serverside', 'sqlalchemy.dialects', 'statement', 'unknown', 'weight']

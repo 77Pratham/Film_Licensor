@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\genai\_interactions\resources\webhooks.py
-# hypothesis_version: 6.142.4
-
-['WebhooksResource', 'batch.cancelled', 'batch.expired', 'batch.failed', 'batch.succeeded', 'disabled', 'enabled', 'interaction.failed', 'name', 'page_size', 'page_token', 'revocation_behavior', 'state', 'subscribed_events', 'update_mask', 'uri', 'video.generated', 'webhook_id']

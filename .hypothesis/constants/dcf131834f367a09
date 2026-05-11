@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\oauth2\service_account.py
-# hypothesis_version: 6.142.4
-
-[3600, 'aud', 'client_email', 'credential_source', 'credential_type', 'exp', 'googleapis.com', 'iat', 'iss', 'principal', 'project_id', 'scope', 'sub', 'target_audience', 'token_uri', 'trust_boundary', 'universe_domain']

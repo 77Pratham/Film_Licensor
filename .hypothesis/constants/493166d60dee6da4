@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\groq\resources\audio\speech.py
-# hypothesis_version: 6.142.4
-
-[8000, 16000, 22050, 24000, 32000, 44100, 48000, 'Accept', 'AsyncSpeech', 'Speech', 'audio/wav', 'flac', 'input', 'model', 'mp3', 'mulaw', 'ogg', 'playai-tts', 'playai-tts-arabic', 'response_format', 'sample_rate', 'speed', 'voice', 'wav']

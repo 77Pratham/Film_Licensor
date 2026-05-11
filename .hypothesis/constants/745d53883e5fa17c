@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\starlette\templating.py
-# hypothesis_version: 6.142.4
-
-[200, 'autoescape', 'background', 'context', 'extensions', 'headers', 'http.response.debug', 'info', 'loader', 'media_type', 'name', 'pass_context', 'request', 'status_code', 'template', 'type', 'url_for']

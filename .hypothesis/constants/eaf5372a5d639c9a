@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\reportlab\lib\PyFontify.py
-# hypothesis_version: 6.142.4
-
-['"', '#', '#\'"', '#[^\\n]*', "'", '(', ')', '0.4', '3.3.0', 'and', 'as', 'assert', 'break', 'class', 'comment', 'continue', 'def', 'del', 'elif', 'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'identifier', 'if', 'import', 'in', 'is', 'keyword', 'lambda', 'not', 'or', 'pass', 'print', 'q', 'raise', 'return', 'string', 'try', 'while', 'with', 'yield', '|']

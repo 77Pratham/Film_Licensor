@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\google\auth\jwt.py
-# hypothesis_version: 6.142.4
-
-[b'.', 3600, 'ES256', 'ES384', 'JWT', 'RS256', 'alg', 'aud', 'client_email', 'exp', 'iat', 'iss', 'issuer', 'kid', 'sub', 'subject', 'typ', 'utf-8']

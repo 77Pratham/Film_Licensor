@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\util\_collections.py
-# hypothesis_version: 6.142.4
-
-[0.5, 100, 'FacadeDict(%s)', 'List[Any]', 'List[_T]', 'Set[_T]', '_DT', '_F', '_KT', '_T', '_T_co', '_VT', '__iter__', '_counter', '_data', '_data_appender', '_mutex', '_unique', 'add', 'append', 'capacity', 'createfunc', 'data', 'registry', 'scopefunc', 'size_alert', 'threshold', 'value']

@@ -1,4 +1,0 @@
-# file: C:\Users\PRATHAM R\AppData\Roaming\Python\Python314\site-packages\sqlalchemy\engine\default.py
-# hypothesis_version: 6.142.4
-
-[128, 1000, 9999, 32700, '%s_m%d', '+', ', ', '.', '.provision', '1.4', '2.0', 'AUTOCOMMIT', 'DEFAULT', 'DMLState', 'Mapping[str, Any]', '\\s*SELECT', '_', '_sa_%032x', 'cprf', 'debug', 'default', 'echo', 'echo_pool', 'engine_connect', 'format', 'future', 'generated in %.5fs', 'isolation_level', 'logging_token', 'max_overflow', 'name', 'named', 'no key %.5fs', 'no_parameters', 'numeric', 'numeric_dollar', 'pool_recycle', 'pool_size', 'pool_timeout', 'poolclass', 'preserve_rowcount', 'qmark', 'raw sql', 'schema', 'schema_translate_map', 'stream_results', 'type_compiler', 'unknown', 'unreflectable', 'use_setinputsizes', 'utf-8', 'yield_per']
