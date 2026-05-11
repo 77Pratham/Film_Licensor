@@ -1,6 +1,6 @@
 # Film Licensing Price Estimator
 
-A production-grade FastAPI pricing engine for film and television licensing deals. Compare multiple deal scenarios side by side, powered by AI reasoning with deterministic fallback, and export a professional PDF deal memo for each estimate.
+AI-assisted film licensing pricing engine built with FastAPI pricing engine for film and television licensing deals. Compare multiple deal scenarios side by side, powered by AI reasoning with deterministic fallback, and export a professional PDF deal memo for each estimate.
 
 ---
 
